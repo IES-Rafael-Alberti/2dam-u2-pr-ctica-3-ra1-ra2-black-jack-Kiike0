@@ -1,4 +1,4 @@
-package com.example.blackjack_jetpackcompose
+package com.example.applicationblackjack
 
 import org.junit.Test
 

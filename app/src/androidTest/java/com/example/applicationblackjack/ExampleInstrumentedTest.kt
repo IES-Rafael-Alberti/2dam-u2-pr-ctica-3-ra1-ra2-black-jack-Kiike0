@@ -1,4 +1,4 @@
-package com.example.blackjack_jetpackcompose
+package com.example.applicationblackjack
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.example.blackjack_jetpackcompose", appContext.packageName)
+        assertEquals("com.example.applicationblackjack", appContext.packageName)
     }
 }

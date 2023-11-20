@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "BlackJack_JetpackCompose"
 include(":app")
- 
+include(":app")
+include(":app")
