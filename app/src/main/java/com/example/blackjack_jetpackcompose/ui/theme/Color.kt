@@ -1,4 +1,4 @@
-package com.example.applicationblackjack.ui.theme
+package com.example.blackjack_jetpackcompose.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

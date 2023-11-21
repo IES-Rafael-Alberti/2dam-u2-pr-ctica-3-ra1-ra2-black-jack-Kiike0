@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.applicationblackjack"
+    namespace = "com.example.blackjack_jetpackcompose"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.applicationblackjack"
+        applicationId = "com.example.blackjack_jetpackcompose"
         minSdk = 34
         targetSdk = 34
         versionCode = 1

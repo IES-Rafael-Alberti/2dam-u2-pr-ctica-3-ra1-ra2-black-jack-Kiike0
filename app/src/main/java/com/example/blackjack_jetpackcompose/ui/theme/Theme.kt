@@ -1,4 +1,4 @@
-package com.example.applicationblackjack.ui.theme
+package com.example.blackjack_jetpackcompose.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -38,7 +38,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun ApplicationBlackJackTheme(
+fun BlackJack_JetpackComposeTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
