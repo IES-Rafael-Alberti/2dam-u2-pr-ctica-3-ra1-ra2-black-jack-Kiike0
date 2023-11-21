@@ -89,9 +89,108 @@ fun Screen1(){
  * Se parará el juego hasta que los dos se planten y entonces se calculará segun su puntuación
  * cuál es el jugador ganador.
  */
+@Preview (showBackground = true)
 @Composable
 fun Multijugador(){
+    val context = LocalContext.current
+    val miBaraja = Baraja
+    var jugador1Puntos by rememberSaveable { mutableStateOf(0) }
+    var jugador2Puntos by rememberSaveable { mutableStateOf(0) }
+    var showCardJugador1 by rememberSaveable { mutableStateOf("reverso") }
+    var showCardJugador2 by rememberSaveable { mutableStateOf("reverso") }
+    var turnoJugador1 by rememberSaveable { mutableStateOf(true) }
+    var juegoFinalizado by rememberSaveable { mutableStateOf(false) }
 
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Red),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        // Muestra la carta del Jugador 1 o el reverso si no es su turno
+        Image(
+            painter = painterResource(id = context.resources.getIdentifier(showCardJugador1, "drawable", context.packageName)),
+            contentDescription = "Carta Jugador 1",
+            modifier = Modifier
+                .size(200.dp)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Muestra la carta del Jugador 2 o el reverso si no es su turno
+        Image(
+            painter = painterResource(id = context.resources.getIdentifier(showCardJugador2, "drawable", context.packageName)),
+            contentDescription = "Carta Jugador 2",
+            modifier = Modifier
+                .size(200.dp)
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Row(
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Button(
+                onClick = {
+                    if (turnoJugador1 && !juegoFinalizado) {
+                        val choosenCard = miBaraja.dameCarta()
+                        if (choosenCard != null) {
+                            showCardJugador1 = "c${choosenCard.idDrawable}"
+                            jugador1Puntos += choosenCard.puntosMin
+                        }
+                        turnoJugador1 = false
+                    }
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Dame carta Jugador 1")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Button(
+                onClick = {
+                    if (!turnoJugador1 && !juegoFinalizado) {
+                        val choosenCard = miBaraja.dameCarta()
+                        if (choosenCard != null) {
+                            showCardJugador2 = "c${choosenCard.idDrawable}"
+                            jugador2Puntos += choosenCard.puntosMin
+                        }
+                        turnoJugador1 = true
+                    }
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            )
+            {
+                Text("Dame carta Jugador 2")
+            }
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Button(
+            onClick = {
+                // Lógica para determinar el ganador y mostrar los resultados
+                juegoFinalizado = true
+                // Puedes comparar las puntuaciones y mostrar un mensaje de resultado aquí
+                // También podrías implementar lógica adicional, como determinar si ambos jugadores se han plantado
+                // y calcular el ganador en ese momento
+            },
+            shape = RoundedCornerShape(10.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Black,
+                contentColor = Color.White
+            )
+        )
+        {
+            Text("Finalizar Juego")
+        }
+    }
 }
 
 @Composable
