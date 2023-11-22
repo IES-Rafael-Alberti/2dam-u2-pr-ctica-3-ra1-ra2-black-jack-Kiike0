@@ -5,12 +5,16 @@ import android.os.Looper
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -20,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalTextStyle
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -32,6 +37,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
@@ -113,12 +119,16 @@ fun Screen1(){
 fun Multijugador() {
     val context = LocalContext.current
     val miBaraja = Baraja
+    val y = 0.dp
+
+
     var jugador1Puntos by rememberSaveable { mutableStateOf(0) }
     var jugador2Puntos by rememberSaveable { mutableStateOf(0) }
     var showCardJugador1 by rememberSaveable { mutableStateOf("reverso") }
     var showCardJugador2 by rememberSaveable { mutableStateOf("reverso") }
     var juegoFinalizado by rememberSaveable { mutableStateOf(false) }
-    var mostrarCartas by rememberSaveable { mutableStateOf(true) }
+    var mostrarCartasJ1 by rememberSaveable { mutableStateOf(true) }
+    var mostrarCartasJ2 by rememberSaveable { mutableStateOf(true) }
     var cartasJugador1 by rememberSaveable { mutableStateOf(listOf<Carta>()) }
     var cartasJugador2 by rememberSaveable { mutableStateOf(listOf<Carta>()) }
 
@@ -129,20 +139,6 @@ fun Multijugador() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Botón para cambiar el turno
-        Button(
-            onClick = {
-                // La lógica para cambiar el turno
-            },
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black,
-                contentColor = Color.White
-            )
-        ) {
-            Text("Cambiar turno")
-        }
-
         // Jugador 1
         Column(
             verticalArrangement = Arrangement.Center,
@@ -159,31 +155,47 @@ fun Multijugador() {
                 )
             )
             Spacer(modifier = Modifier.height(20.dp))
-            if (mostrarCartas) {
-                LazyRow {
-                    items(cartasJugador1.size) { index ->
-                        val card = cartasJugador1[index]
-                        Image(
-                            painter = painterResource(
-                                id = context.resources.getIdentifier(
-                                    "c${card.idDrawable}",
-                                    "drawable",
-                                    context.packageName
-                                )
-                            ),
-                            contentDescription = "Carta Jugador 1",
-                            modifier = Modifier
-                                .size(100.dp)
-                                .padding(0.dp)
-                        )
+            Box {
+                var xJ1 = 0.dp
+
+                for (card in cartasJugador1) {
+                    Box(
+                        modifier = Modifier
+                            .offset(xJ1, y)
+                            .fillMaxWidth()
+                    ) {
+                        if (mostrarCartasJ1) {
+                            Image(
+                                painter = painterResource(
+                                    id = context.resources.getIdentifier(
+                                        "c${card.idDrawable}",
+                                        "drawable",
+                                        context.packageName
+                                    )
+                                ),
+                                contentDescription = "Carta Jugador 1",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .padding(0.dp)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(
+                                    id = context.resources.getIdentifier(
+                                        "reverso",
+                                        "drawable",
+                                        context.packageName
+                                    )
+                                ),
+                                contentDescription = "reverso carta",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .padding(0.dp)
+                            )
+                        }
+                        xJ1 += 30.dp
                     }
                 }
-            } else {
-                Image(
-                    painter = painterResource(id = R.drawable.reverso),
-                    contentDescription = "Reverso",
-                    modifier = Modifier.size(100.dp)
-                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -210,6 +222,22 @@ fun Multijugador() {
                     )
                 ) {
                     Text(text = "Dame carta")
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = {
+                        if(mostrarCartasJ1)
+                            mostrarCartasJ1=false
+                        else
+                            mostrarCartasJ1=true
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(text = "Tapar / Destapar")
                 }
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
@@ -246,31 +274,47 @@ fun Multijugador() {
             )
             Spacer(modifier = Modifier.height(20.dp))
 
-            if (mostrarCartas) {
-                LazyRow {
-                    items(cartasJugador2.size) { index ->
-                        val card = cartasJugador2[index]
-                        Image(
-                            painter = painterResource(
-                                id = context.resources.getIdentifier(
-                                    "c${card.idDrawable}",
-                                    "drawable",
-                                    context.packageName
-                                )
-                            ),
-                            contentDescription = "Carta Jugador 2",
-                            modifier = Modifier
-                                .size(100.dp)
-                                .padding(1.dp)
-                        )
+            Box {
+                var xJ2 = 0.dp
+
+                for (card in cartasJugador2) {
+                    Box(
+                        modifier = Modifier
+                            .offset(xJ2, y)
+                            .fillMaxWidth()
+                    ) {
+                        if (mostrarCartasJ2) {
+                            Image(
+                                painter = painterResource(
+                                    id = context.resources.getIdentifier(
+                                        "c${card.idDrawable}",
+                                        "drawable",
+                                        context.packageName
+                                    )
+                                ),
+                                contentDescription = "Carta Jugador 2",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .padding(0.dp)
+                            )
+                        } else {
+                            Image(
+                                painter = painterResource(
+                                    id = context.resources.getIdentifier(
+                                        "reverso",
+                                        "drawable",
+                                        context.packageName
+                                    )
+                                ),
+                                contentDescription = "reverso carta",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .padding(0.dp)
+                            )
+                        }
+                        xJ2 += 30.dp
                     }
                 }
-            } else {
-                Image(
-                    painter = painterResource(id = R.drawable.reverso),
-                    contentDescription = "Reverso",
-                    modifier = Modifier.size(100.dp)
-                )
             }
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -301,6 +345,22 @@ fun Multijugador() {
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     onClick = {
+                        if(mostrarCartasJ2)
+                            mostrarCartasJ2=false
+                        else
+                            mostrarCartasJ2=true
+                    },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(text = "Tapar / Destapar")
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = {
                         // Lógica para plantarse
                     },
                     shape = RoundedCornerShape(10.dp),
@@ -327,7 +387,7 @@ fun Multijugador() {
                     cartasJugador2 = emptyList()
                     jugador1Puntos = 0
                     jugador2Puntos = 0
-                    mostrarCartas = true
+                    mostrarCartasJ1 = true
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
