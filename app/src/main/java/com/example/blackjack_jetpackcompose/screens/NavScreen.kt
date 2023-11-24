@@ -56,12 +56,13 @@ import com.example.blackjack_jetpackcompose.Carta
 import com.example.blackjack_jetpackcompose.R
 import kotlinx.coroutines.delay
 
+
 /**
  * Screen1
  */
 @Preview(showBackground = true)
 @Composable
-fun Screen1(){
+fun Screen1() {
 
 
     Column(
@@ -114,13 +115,10 @@ fun Screen1(){
  * Se parará el juego hasta que los dos se planten y entonces se calculará segun su puntuación
  * cuál es el jugador ganador.
  */
-@Preview (showBackground = true)
+@Preview(showBackground = true)
 @Composable
 fun Multijugador() {
-    val context = LocalContext.current
     val miBaraja = Baraja
-    val y = 0.dp
-
 
     var jugador1Puntos by rememberSaveable { mutableStateOf(0) }
     var jugador2Puntos by rememberSaveable { mutableStateOf(0) }
@@ -139,241 +137,126 @@ fun Multijugador() {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Jugador 1
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Jugador(
+            nombreJugador = "Jugador 1",
+            cartasJugador = cartasJugador1,
+            mostrarCartas = mostrarCartasJ1
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Botones para Jugador 1
+        Row(
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Jugador 1",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    shadow = Shadow(
-                        color = Color.Black,
-                        blurRadius = 3f
-                    )
-                )
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            Box {
-                var xJ1 = 0.dp
-
-                for (card in cartasJugador1) {
-                    Box(
-                        modifier = Modifier
-                            .offset(xJ1, y)
-                            .fillMaxWidth()
-                    ) {
-                        if (mostrarCartasJ1) {
-                            Image(
-                                painter = painterResource(
-                                    id = context.resources.getIdentifier(
-                                        "c${card.idDrawable}",
-                                        "drawable",
-                                        context.packageName
-                                    )
-                                ),
-                                contentDescription = "Carta Jugador 1",
-                                modifier = Modifier
-                                    .size(150.dp)
-                                    .padding(0.dp)
-                            )
-                        } else {
-                            Image(
-                                painter = painterResource(
-                                    id = context.resources.getIdentifier(
-                                        "reverso",
-                                        "drawable",
-                                        context.packageName
-                                    )
-                                ),
-                                contentDescription = "reverso carta",
-                                modifier = Modifier
-                                    .size(150.dp)
-                                    .padding(0.dp)
-                            )
+            Button(
+                onClick = {
+                    if (!juegoFinalizado) {
+                        val choosenCard = miBaraja.dameCarta()
+                        if (choosenCard != null) {
+                            showCardJugador1 = "c${choosenCard.idDrawable}"
+                            jugador1Puntos += choosenCard.puntosMin
+                            cartasJugador1 = cartasJugador1 + choosenCard
                         }
-                        xJ1 += 30.dp
                     }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Botones para Jugador 1
-            Row(
-                horizontalArrangement = Arrangement.Center
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
             ) {
-                Button(
-                    onClick = {
-                        if (!juegoFinalizado) {
-                            val choosenCard = miBaraja.dameCarta()
-                            if (choosenCard != null) {
-                                showCardJugador1 = "c${choosenCard.idDrawable}"
-                                jugador1Puntos += choosenCard.puntosMin
-                                cartasJugador1 = cartasJugador1 + choosenCard
-                            }
-                        }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Dame carta")
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Button(
-                    onClick = {
-                        if(mostrarCartasJ1)
-                            mostrarCartasJ1=false
-                        else
-                            mostrarCartasJ1=true
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Tapar / Destapar")
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Button(
-                    onClick = {
-                        // Lógica para plantarse
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Plantarse")
-                }
+                Text(text = "Dame carta")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = {
+                    mostrarCartasJ1 = !mostrarCartasJ1
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = if (mostrarCartasJ1) "Tapar" else "Destapar")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = {
+                    // Lógica para plantarse
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = "Plantarse")
             }
         }
+
 
         Spacer(modifier = Modifier.height(20.dp))
 
         // Jugador 2
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+        Jugador(
+            nombreJugador = "Jugador 2",
+            cartasJugador = cartasJugador2,
+            mostrarCartas = mostrarCartasJ2
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        // Botones para Jugador 2
+        Row(
+            horizontalArrangement = Arrangement.Center
         ) {
-            Text(
-                text = "Jugador 2",
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    shadow = Shadow(
-                        color = Color.Black,
-                        blurRadius = 3f
-                    )
-                )
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-
-            Box {
-                var xJ2 = 0.dp
-
-                for (card in cartasJugador2) {
-                    Box(
-                        modifier = Modifier
-                            .offset(xJ2, y)
-                            .fillMaxWidth()
-                    ) {
-                        if (mostrarCartasJ2) {
-                            Image(
-                                painter = painterResource(
-                                    id = context.resources.getIdentifier(
-                                        "c${card.idDrawable}",
-                                        "drawable",
-                                        context.packageName
-                                    )
-                                ),
-                                contentDescription = "Carta Jugador 2",
-                                modifier = Modifier
-                                    .size(150.dp)
-                                    .padding(0.dp)
-                            )
-                        } else {
-                            Image(
-                                painter = painterResource(
-                                    id = context.resources.getIdentifier(
-                                        "reverso",
-                                        "drawable",
-                                        context.packageName
-                                    )
-                                ),
-                                contentDescription = "reverso carta",
-                                modifier = Modifier
-                                    .size(150.dp)
-                                    .padding(0.dp)
-                            )
+            Button(
+                onClick = {
+                    if (!juegoFinalizado) {
+                        val choosenCard = miBaraja.dameCarta()
+                        if (choosenCard != null) {
+                            showCardJugador2 = "c${choosenCard.idDrawable}"
+                            jugador2Puntos += choosenCard.puntosMin
+                            cartasJugador2 = cartasJugador2 + choosenCard
                         }
-                        xJ2 += 30.dp
                     }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            // Botones para Jugador 2
-            Row(
-                horizontalArrangement = Arrangement.Center
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
             ) {
-                Button(
-                    onClick = {
-                        if (!juegoFinalizado) {
-                            val choosenCard = miBaraja.dameCarta()
-                            if (choosenCard != null) {
-                                showCardJugador2 = "c${choosenCard.idDrawable}"
-                                jugador2Puntos += choosenCard.puntosMin
-                                cartasJugador2 = cartasJugador2 + choosenCard
-                            }
-                        }
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Dame carta")
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Button(
-                    onClick = {
-                        if(mostrarCartasJ2)
-                            mostrarCartasJ2=false
-                        else
-                            mostrarCartasJ2=true
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(text = "Tapar / Destapar")
-                }
-                Spacer(modifier = Modifier.width(16.dp))
-                Button(
-                    onClick = {
-                        // Lógica para plantarse
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Black,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Plantarse")
-                }
+                Text("Dame carta")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = {
+                    mostrarCartasJ2 = !mostrarCartasJ2
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text(text = if (mostrarCartasJ2) "Tapar" else "Destapar")
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Button(
+                onClick = {
+                    // Lógica para plantarse
+                },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Plantarse")
             }
         }
-
         Spacer(modifier = Modifier.height(20.dp))
 
         // Botones generales
@@ -418,83 +301,83 @@ fun Multijugador() {
             }
         }
     }
-}
 
-@Composable
-fun Maquina(){
 
 }
 
 
-
-
-/**
- * Método creado Composable que define lo que pasa en pantalla
- *
- */
-@Preview(showBackground = true)
 @Composable
-fun AccionIniciar() {
-
+fun Jugador(
+    nombreJugador: String,
+    cartasJugador: List<Carta>,
+    mostrarCartas: Boolean
+) {
     val context = LocalContext.current
-    var showCard by rememberSaveable { mutableStateOf("reverso") }
-    val miBaraja = Baraja
-
+    val y = 0.dp
+    // Jugador Correspondiente
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally //Centra el contenido de la columna
-    )
-    {
-        Image(
-            painter = painterResource(
-                id = context.resources.getIdentifier(
-                    showCard,
-                    "drawable", context.packageName
-                )
-            ),
-            contentDescription = "Carta",
-            modifier = Modifier
-                .size(400.dp)
-        )
-        Spacer(modifier = Modifier.height(20.dp))
-        Row(
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Button(
-                onClick = { //Enseña la carta de la baraja y si es nula enseña el reverso
-                    val choosenCard = miBaraja.dameCarta()
-                    showCard = if (choosenCard == null) {
-                        "reverso"
-                    } else
-                        "c${choosenCard.idDrawable}"
-                },
-                shape = RoundedCornerShape(10.dp), //Hace al botón más cuadrado
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White //Cambia el color de los botones
-                )
-            ) {
-                Text(text = "Dame carta")
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            Button(
-                onClick = { //Reinicia la baraja desde 0
-                    miBaraja.crearBaraja()
-                    miBaraja.barajar()
-                    showCard = "reverso"
-                },
-                shape = RoundedCornerShape(10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = nombreJugador,
+            style = TextStyle(
+                fontSize = 24.sp,
+                shadow = Shadow(
+                    color = Color.Black,
+                    blurRadius = 3f
                 )
             )
-            {
-                Text("Reiniciar")
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        Box {
+            var x = 0.dp
+
+            for (card in cartasJugador) {
+                Box(
+                    modifier = Modifier
+                        .offset(x, y)
+                        .fillMaxWidth()
+                ) {
+                    if (mostrarCartas) {
+                        Image(
+                            painter = painterResource(
+                                id = context.resources.getIdentifier(
+                                    "c${card.idDrawable}",
+                                    "drawable",
+                                    context.packageName
+                                )
+                            ),
+                            contentDescription = "Carta mostrada",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .padding(0.dp)
+                        )
+                    } else {
+                        Image(
+                            painter = painterResource(
+                                id = context.resources.getIdentifier(
+                                    "reverso",
+                                    "drawable",
+                                    context.packageName
+                                )
+                            ),
+                            contentDescription = "reverso carta",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .padding(0.dp)
+                        )
+                    }
+                    x += 30.dp
+                }
             }
         }
+
     }
 }
+
+@Composable
+fun Maquina() {
+
+}
+
