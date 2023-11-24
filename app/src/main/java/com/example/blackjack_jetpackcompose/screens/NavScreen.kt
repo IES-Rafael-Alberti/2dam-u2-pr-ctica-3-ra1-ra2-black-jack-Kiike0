@@ -124,7 +124,6 @@ fun Multijugador() {
     var jugador2Puntos by rememberSaveable { mutableStateOf(0) }
     var showCardJugador1 by rememberSaveable { mutableStateOf("reverso") }
     var showCardJugador2 by rememberSaveable { mutableStateOf("reverso") }
-    var juegoFinalizado by rememberSaveable { mutableStateOf(false) }
     var mostrarCartasJ1 by rememberSaveable { mutableStateOf(true) }
     var mostrarCartasJ2 by rememberSaveable { mutableStateOf(true) }
     var cartasJugador1 by rememberSaveable { mutableStateOf(listOf<Carta>()) }
@@ -150,14 +149,14 @@ fun Multijugador() {
         ) {
             Button(
                 onClick = {
-                    if (!juegoFinalizado) {
-                        val choosenCard = miBaraja.dameCarta()
-                        if (choosenCard != null) {
-                            showCardJugador1 = "c${choosenCard.idDrawable}"
-                            jugador1Puntos += choosenCard.puntosMin
-                            cartasJugador1 = cartasJugador1 + choosenCard
-                        }
+
+                    val choosenCard = miBaraja.dameCarta()
+                    if (choosenCard != null) {
+                        showCardJugador1 = "c${choosenCard.idDrawable}"
+                        jugador1Puntos += choosenCard.puntosMin
+                        cartasJugador1 = cartasJugador1 + choosenCard
                     }
+
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -213,14 +212,14 @@ fun Multijugador() {
         ) {
             Button(
                 onClick = {
-                    if (!juegoFinalizado) {
-                        val choosenCard = miBaraja.dameCarta()
-                        if (choosenCard != null) {
-                            showCardJugador2 = "c${choosenCard.idDrawable}"
-                            jugador2Puntos += choosenCard.puntosMin
-                            cartasJugador2 = cartasJugador2 + choosenCard
-                        }
+
+                    val choosenCard = miBaraja.dameCarta()
+                    if (choosenCard != null) {
+                        showCardJugador2 = "c${choosenCard.idDrawable}"
+                        jugador2Puntos += choosenCard.puntosMin
+                        cartasJugador2 = cartasJugador2 + choosenCard
                     }
+
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -265,7 +264,6 @@ fun Multijugador() {
         ) {
             Button(
                 onClick = {
-                    juegoFinalizado = false
                     cartasJugador1 = emptyList()
                     cartasJugador2 = emptyList()
                     jugador1Puntos = 0
@@ -284,11 +282,7 @@ fun Multijugador() {
             Spacer(modifier = Modifier.width(16.dp))
             Button(
                 onClick = {
-                    // Lógica para determinar el ganador y mostrar los resultados
-                    juegoFinalizado = true
-                    // Puedes comparar las puntuaciones y mostrar un mensaje de resultado aquí
-                    // También podrías implementar lógica adicional, como determinar si ambos jugadores se han plantado
-                    // y calcular el ganador en ese momento
+                    //salir del juego te vuelve a la pantalla anterior
                 },
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -297,7 +291,7 @@ fun Multijugador() {
                 )
             )
             {
-                Text("Finalizar Juego")
+                Text("Salir del juego")
             }
         }
     }
