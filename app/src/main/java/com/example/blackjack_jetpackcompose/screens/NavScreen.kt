@@ -56,6 +56,7 @@ import com.example.blackjack_jetpackcompose.Carta
 import com.example.blackjack_jetpackcompose.R
 import kotlinx.coroutines.delay
 
+//ESTO ES PARA PROBAR LA BRANCH
 
 /**
  * Screen1
