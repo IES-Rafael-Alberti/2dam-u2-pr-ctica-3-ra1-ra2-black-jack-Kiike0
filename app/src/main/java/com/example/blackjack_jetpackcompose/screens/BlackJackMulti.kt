@@ -30,9 +30,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,11 +68,11 @@ fun PantallaMultijugadorInicial(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.tapete), // Reemplaza R.drawable.tu_imagen con el ID de tu imagen
-            contentDescription = null, // Agrega una descripción si es necesario
+            painter = painterResource(id = R.drawable.tapete),
+            contentDescription = "carta mostrada",
             modifier = Modifier
                 .fillMaxSize()
-                .clip(MaterialTheme.shapes.medium), // Opcional: clip para redondear las esquinas
+                .clip(MaterialTheme.shapes.medium),
             contentScale = ContentScale.Crop
         )
         ConfigJugadores(
@@ -124,14 +121,14 @@ fun ConfigJugadores(
             onDismissRequest = { onDissmiss() },
             properties = DialogProperties(dismissOnClickOutside = false),
             content = {
-                // Contenido del diálogo con esquinas redondeadas
+                // Contenido del diálogo
                 Column(
                     modifier = Modifier
                         .background(
                             Color.DarkGray,
                             MaterialTheme.shapes.medium // Ajusta la forma del recorte para redondear las esquinas
                         )
-                        .padding(16.dp)
+                        .padding(18.dp)
                 ) {
                     TituloDialogo(text = "Configuración del juego")
                     ElementoNick(
@@ -159,7 +156,7 @@ fun ConfigJugadores(
 }
 
 /**
- * Función composable que representa la composición del título.
+ * Función composable que representa la composición de un título.
  *
  * @param text El texto que se mostrará como título.
  */
@@ -204,8 +201,8 @@ fun ElementoNick(
                 contentDescription = "Imagen Jugador",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(all = 8.dp)
-                    .size(40.dp)
+                    .padding(all = 10.dp)
+                    .size(50.dp)
                     .clip(CircleShape)
             )
             Text(
@@ -250,7 +247,7 @@ fun RellenarNick(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
-                .padding(8.dp),
+                .padding(10.dp),
             label = { Text(text = "Introduce tu nick") },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.White,
@@ -280,7 +277,7 @@ fun Botones(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 30.dp)
+            .padding(top = 25.dp)
     ) {
         Button(
             enabled = btnAceptar,
@@ -302,7 +299,7 @@ fun Botones(
                 containerColor = Color.White,
                 contentColor = Color.Black
             ),
-            modifier = Modifier.padding(start = 4.dp),
+            modifier = Modifier.padding(start = 5.dp),
             onClick = { navController.navigate(Routes.GameScreen.route) }
         ) {
             Text(text = "Cancelar")
@@ -336,7 +333,7 @@ fun EndGameDialog(
                         Color.DarkGray,
                         MaterialTheme.shapes.medium
                     )
-                    .padding(all = 24.dp)
+                    .padding(all = 20.dp)
                     .fillMaxWidth()
             ) {
                 TituloDialogo(text = viewModel.getGanador())
@@ -508,7 +505,7 @@ fun Jugador1(
     turnoJugador: Int,
 ) {
     Text(
-        modifier = Modifier.padding(bottom = 8.dp),
+        modifier = Modifier.padding(bottom = 10.dp),
         text = viewModel.infoJugador(1),
         style = TextStyle(
             color = Color.White,
@@ -537,7 +534,7 @@ fun Jugador2(
     turnoJugador: Int
 ) {
     Text(
-        modifier = Modifier.padding(bottom = 8.dp),
+        modifier = Modifier.padding(bottom = 10.dp),
         text = viewModel.infoJugador(2),
         style = TextStyle(
             color = Color.White,
@@ -570,7 +567,7 @@ fun BotonesJugador(
 
     Row {
         Button(
-            modifier = Modifier.padding(end = 4.dp),
+            modifier = Modifier.padding(end = 5.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(

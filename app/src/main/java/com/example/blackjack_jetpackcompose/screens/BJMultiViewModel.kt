@@ -275,13 +275,23 @@ class BJMultiViewModel(application: Application) : AndroidViewModel(application)
      *
      * @return Una cadena que indica el ganador o si han empatado
      */
-    fun getGanador() : String {
-        return if (_jugador1.value!!.puntos <= 21 && _jugador1.value!!.puntos > _jugador2.value!!.puntos) {
-            "¡¡Ha ganado ${_jugador1.value!!.nick}!!"
-        } else if (_jugador2.value!!.puntos <= 21) {
-            "¡¡Ha ganado ${_jugador2.value!!.nick}!!"
-        } else {
-            "¡Empate!"
+    fun getGanador(): String {
+        return when {
+            _jugador1.value!!.puntos == 21 && _jugador2.value!!.puntos != 21 -> {
+                "¡Ha ganado ${_jugador1.value!!.nick} con un Blackjack!"
+            }
+            _jugador2.value!!.puntos == 21 && _jugador1.value!!.puntos != 21 -> {
+                "¡Ha ganado ${_jugador2.value!!.nick} con un Blackjack!"
+            }
+            _jugador1.value!!.puntos < 21 && (_jugador1.value!!.puntos > _jugador2.value!!.puntos || _jugador2.value!!.puntos > 21) -> {
+                "¡Ha ganado ${_jugador1.value!!.nick}!"
+            }
+            _jugador2.value!!.puntos < 21 -> {
+                "¡Ha ganado ${_jugador2.value!!.nick}!"
+            }
+            else -> {
+                "¡Empate!"
+            }
         }
     }
 
