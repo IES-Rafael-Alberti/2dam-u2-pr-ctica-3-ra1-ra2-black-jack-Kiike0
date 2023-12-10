@@ -353,7 +353,7 @@ fun EndGameDialog(
                         Color.DarkGray,
                         MaterialTheme.shapes.medium
                     )
-                    .padding(all = 20.dp)
+                    .padding(all = 10.dp)
                     .fillMaxWidth()
             ) {
                 TituloDialogo(
