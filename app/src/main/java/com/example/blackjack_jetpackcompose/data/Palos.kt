@@ -10,9 +10,5 @@ package com.example.blackjack_jetpackcompose.data
  * @property PICAS Represena las picas de la baraja.
  */
 enum class Palos {
-    NINGUNA,
-    CORAZONES,
-    DIAMANTES,
-    TREBOLES,
-    PICAS
+    NINGUNA, CORAZONES, DIAMANTES, TREBOLES, PICAS
 }

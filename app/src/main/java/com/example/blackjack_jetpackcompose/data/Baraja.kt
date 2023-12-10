@@ -46,7 +46,7 @@ class Baraja {
                             getIdDrawable(
                                 context,
                                 "${Palos.values()[palo].toString().lowercase()}_${cont}"
-                            )
+                            ) //Aqui puedo cambiar a c$cont como lo tenía antes, pero entonces no se usan los palos
                         )
                     )
                 }
@@ -71,15 +71,6 @@ class Baraja {
             val carta = listaCartas.last()
             listaCartas.removeLast()
             return carta
-        }
-
-        /**
-         * Carta bocaabajo
-         *
-         * @return devuelve la carta reverso.
-         */
-        fun cartaBocaabajo(): Carta {
-            return(Carta(Naipes.NINGUNA, Palos.NINGUNA, 0, 0, R.drawable.reverso))
         }
 
         /**

@@ -40,11 +40,11 @@ fun PantallaJuego(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.tapete), // Reemplaza R.drawable.tu_imagen con el ID de tu imagen
-            contentDescription = null, // Agrega una descripción si es necesario
+            painter = painterResource(id = R.drawable.tapete),
+            contentDescription = "Tapete del juego",
             modifier = Modifier
                 .fillMaxSize()
-                .clip(MaterialTheme.shapes.medium), // Opcional: clip para redondear las esquinas
+                .clip(MaterialTheme.shapes.medium),
             contentScale = ContentScale.Crop
         )
 
