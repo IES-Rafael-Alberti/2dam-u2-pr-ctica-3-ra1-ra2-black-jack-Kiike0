@@ -314,7 +314,7 @@ fun Botones(
  *
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- * @param showEndGameDialog Flag indicating whether the finish game dialog is visible.
+ * @param showEndGameDialog Indica si el diálogo de finalización del juego es visible.
  */
 @Composable
 fun EndGameDialog(
@@ -588,20 +588,6 @@ fun BotonesJugador(
             }
         ) {
             Text(text = "Plantarse")
-        }
-        // Botón para mostrar/ocultar cartas
-        Button(
-            modifier = Modifier.padding(start = 4.dp),
-            shape = RoundedCornerShape(10.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black,
-                contentColor = Color.White
-            ),
-            onClick = {
-                // Cambia el estado local al hacer clic
-            }
-        ) {
-            //Text(text = if (mostrarCartas) "Ocultar" else "Mostrar")
         }
     }
 
