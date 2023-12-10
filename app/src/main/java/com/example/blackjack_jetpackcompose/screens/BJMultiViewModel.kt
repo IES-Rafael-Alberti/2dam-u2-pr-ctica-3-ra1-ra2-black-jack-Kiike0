@@ -17,7 +17,7 @@ import java.util.ArrayList
  *
  * @param application El contexto de la aplicación utilizado para inicializar ViewModel.
  */
-class ViewModel(application: Application) : AndroidViewModel(application) {
+class BJMultiViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext
@@ -52,6 +52,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private val _actualizarCartasJg = MutableLiveData<Boolean>()
     val actualizarCartasJg: LiveData<Boolean> = _actualizarCartasJg
 
+
     init {
         nuevaBaraja()
     }
@@ -62,6 +63,15 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     private fun nuevaBaraja() {
         Baraja.crearBaraja(context)
         Baraja.barajar()
+    }
+
+    /**
+     * Inicia un nuevo juego creando nuevos jugadores y restableciendo la información.
+     */
+    fun newGame() {
+        _jugador1.value = Jugador(_nickNameJugador1.value!!, ArrayList(), puntos = 0)
+        _jugador2.value = Jugador(_nickNameJugador2.value!!, ArrayList(), puntos = 0)
+        resetGame()
     }
 
     /**
@@ -77,6 +87,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     fun onClickCloseDialog() {
         _configJugadores.value = false
     }
+
 
     /**
      * Maneja los cambios en el nick.
@@ -94,23 +105,12 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         _btnAceptar.value = !(_nickNameJugador1.value.isNullOrEmpty() || _nickNameJugador2.value.isNullOrEmpty())
     }
 
-    /**
-     * Cambia el turno del jugador.
-     */
-    private fun cambiaTurno() {
-        if (_cambioTurno.value == 1) {
-            _cambioTurno.value = 2
-        }
-        else{
-            _cambioTurno.value = 1
-        }
-    }
 
     /**
      * Fuerza la actualización de las cartas de los jugadores en la Vista.
      * (truco para forzar la recomposición del componente LazyRow en BlackJackMulti.kt)
      */
-    private fun forceRefreshPlayersCards() {
+    private fun forzarActualizarCartas() {
         if (_actualizarCartasJg.value == null) {
             _actualizarCartasJg.value = false
         } else {
@@ -156,7 +156,7 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         //Verifica si el juego ha terminado
         _gameOverDialog.value = (_plantarJugador1.value == true && _plantarJugador2.value == true)
 
-        forceRefreshPlayersCards()
+        forzarActualizarCartas()
 
         if (
             (_cambioTurno.value == 1 && _plantarJugador2.value == false) ||
@@ -164,6 +164,18 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         )
         {
             cambiaTurno()
+        }
+    }
+
+    /**
+     * Cambia el turno del jugador.
+     */
+    private fun cambiaTurno() {
+        if (_cambioTurno.value == 1) {
+            _cambioTurno.value = 2
+        }
+        else{
+            _cambioTurno.value = 1
         }
     }
 
@@ -195,14 +207,6 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /**
-     * Inicia un nuevo juego creando nuevos jugadores y restableciendo la información.
-     */
-    fun newGame() {
-        _jugador1.value = Jugador(_nickNameJugador1.value!!, ArrayList(), puntos = 0)
-        _jugador2.value = Jugador(_nickNameJugador2.value!!, ArrayList(), puntos = 0)
-        resetGame()
-    }
 
     /**
      * Restablece el mazo de cartas y la información del jugador para comenzar un nuevo juego
@@ -238,17 +242,31 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     /**
-     * Ajusta los puntos de un jugador para tener en cuenta los ases.
+     * Ajusta los puntos de un jugador para tener en cuenta los ases, permitiendo que un as
+     * cambie su valor de 1 a 11 si el jugador puede seguir jugando sin pasarse de 21.
      *
      * @param jugador El objeto Jugador para quien se calculan los puntos.
      */
     private fun calculoAses(jugador: Jugador) {
+        var tieneAs = false
         for (carta in jugador.listadeCartas) {
-            if (carta.puntosMin != carta.puntosMax &&
-                (jugador.puntos - carta.puntosMin + carta.puntosMax) <= 21) {
-                jugador.puntos -= carta.puntosMin
-                jugador.puntos += carta.puntosMax
+            // Verifica si la carta es un as y su valor máximo es 11
+            if (carta.puntosMin != carta.puntosMax && carta.puntosMax == 11) {
+                tieneAs = true
+                break
             }
+        }
+
+        // Si el jugador tiene un as con valor máximo de 11
+        if (tieneAs) {
+            // Calcula los puntos si el as se contara como 11
+            val puntosConAsMax = jugador.puntos + 10
+            // Verifica si el jugador puede cambiar el valor del as a 10 sin pasarse de 21
+            if (puntosConAsMax <= 21) {
+                // Ajusta los puntos del jugador sumando 10 al valor actual
+                jugador.puntos = puntosConAsMax
+            }
+            // Si el jugador ya tiene 21 puntos o más, el as se contará como 1
         }
     }
 
@@ -267,5 +285,15 @@ class ViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Finaliza el juego y resetea todas las propiedades para un nuevo juego
+     */
+    fun finalizarJuego(){
+        _configJugadores.value = true
+        _gameOverDialog.value = false
+        _nickNameJugador1.value = ""
+        _nickNameJugador2.value = ""
+        _btnAceptar.value = false
+    }
 
 }
