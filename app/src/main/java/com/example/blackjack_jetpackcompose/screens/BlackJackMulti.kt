@@ -459,7 +459,7 @@ fun MultijugadorLayout(
             ) {
                 //Visualización de sus cartas de cada jugador
                 items(viewModel.getCartasJugador(1)) { card ->
-                    ElementoCarta(carta = card)
+                    ElementoCartaJ1(carta = card, viewModel)
                 }
             }
             LazyRow(
@@ -470,7 +470,7 @@ fun MultijugadorLayout(
                     .weight(3f)
             ) {
                 items(viewModel.getCartasJugador(2)) { card ->
-                    ElementoCarta(carta = card)
+                    ElementoCartaJ2(carta = card, viewModel)
                 }
             }
             Column(
@@ -497,20 +497,94 @@ fun MultijugadorLayout(
  * @param carta La carta que se va a mostrar
  */
 @Composable
-fun ElementoCarta(carta: Carta) {
-    Image(
-        modifier = Modifier
-            .height(240.dp)
-            .padding(vertical = 10.dp)
-            .border(
-                width = 2.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .clip(RoundedCornerShape(8.dp)),
-        painter = painterResource(id = carta.idDrawable),
-        contentDescription = "${carta.nombre} de ${carta.palo}"
-    )
+fun ElementoCartaJ1(
+    carta: Carta,
+    viewModel : BJMultiViewModel
+) {
+    if(viewModel.mostrarCartasJ1.value==true){
+        Image(
+            modifier = Modifier
+                .height(240.dp)
+                .padding(vertical = 10.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clip(RoundedCornerShape(8.dp)),
+            painter = painterResource(id = carta.idDrawable),
+            contentDescription = "${carta.nombre} de ${carta.palo}"
+        )
+    } else {
+        Image(
+            painter = painterResource(
+                id = viewModel.context.resources.getIdentifier(
+                    "reverso",
+                    "drawable",
+                    viewModel.context.packageName
+                )
+            ),
+            contentDescription = "reverso carta",
+            modifier = Modifier
+                .height(240.dp)
+                .padding(vertical = 10.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clip(RoundedCornerShape(8.dp))
+        )
+    }
+
+}
+
+/**
+ * Función composable que representa un objeto de tipo carta en la mano del jugador.
+ *
+ * @param carta La carta que se va a mostrar
+ */
+@Composable
+fun ElementoCartaJ2(
+    carta: Carta,
+    viewModel : BJMultiViewModel
+) {
+    if(viewModel.mostrarCartasJ2.value==true){
+        Image(
+            modifier = Modifier
+                .height(240.dp)
+                .padding(vertical = 10.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clip(RoundedCornerShape(8.dp)),
+            painter = painterResource(id = carta.idDrawable),
+            contentDescription = "${carta.nombre} de ${carta.palo}"
+        )
+    } else {
+        Image(
+            painter = painterResource(
+                id = viewModel.context.resources.getIdentifier(
+                    "reverso",
+                    "drawable",
+                    viewModel.context.packageName
+                )
+            ),
+            contentDescription = "reverso carta",
+            modifier = Modifier
+                .height(240.dp)
+                .padding(vertical = 10.dp)
+                .border(
+                    width = 2.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(8.dp)
+                )
+                .clip(RoundedCornerShape(8.dp))
+        )
+    }
+
 }
 
 /**
@@ -526,15 +600,17 @@ fun Jugador1(
     plantaJugador1: Boolean,
     turnoJugador: Int,
 ) {
-    Text(
-        modifier = Modifier.padding(bottom = 10.dp),
-        text = viewModel.infoJugador(1),
-        style = TextStyle(
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 20.sp
+    if(viewModel.mostrarCartasJ1.value==true){
+        Text(
+            modifier = Modifier.padding(bottom = 10.dp),
+            text = viewModel.infoJugador(1),
+            style = TextStyle(
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
+            )
         )
-    )
+    }
     BotonesJugador(
         viewModel = viewModel,
         jugadorId = 1,
@@ -555,15 +631,17 @@ fun Jugador2(
     plantaJugador2: Boolean,
     turnoJugador: Int
 ) {
-    Text(
-        modifier = Modifier.padding(bottom = 10.dp),
-        text = viewModel.infoJugador(2),
-        style = TextStyle(
-            color = Color.White,
-            fontWeight = FontWeight.SemiBold,
-            fontSize =20.sp
+    if(viewModel.mostrarCartasJ2.value==true){
+        Text(
+            modifier = Modifier.padding(bottom = 10.dp),
+            text = viewModel.infoJugador(2),
+            style = TextStyle(
+                color = Color.White,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp
+            )
         )
-    )
+    }
     BotonesJugador(
         viewModel = viewModel,
         jugadorId = 2,

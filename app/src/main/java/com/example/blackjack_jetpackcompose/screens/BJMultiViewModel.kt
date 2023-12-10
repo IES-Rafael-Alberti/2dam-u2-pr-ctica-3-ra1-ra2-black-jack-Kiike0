@@ -20,7 +20,7 @@ import java.util.ArrayList
 class BJMultiViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
-    private val context = getApplication<Application>().applicationContext
+    val context = getApplication<Application>().applicationContext
 
     private val _configJugadores = MutableLiveData<Boolean>()
     val configJugadores: LiveData<Boolean> = _configJugadores
@@ -39,6 +39,12 @@ class BJMultiViewModel(application: Application) : AndroidViewModel(application)
 
     private val _cambioTurno = MutableLiveData<Int>()
     val cambioTurno: LiveData<Int> = _cambioTurno
+
+    private val _mostrarCartasJ1 = MutableLiveData<Boolean>()
+    val mostrarCartasJ1: LiveData<Boolean> = _mostrarCartasJ1
+
+    private val _mostrarCartasJ2 = MutableLiveData<Boolean>()
+    val mostrarCartasJ2: LiveData<Boolean> = _mostrarCartasJ2
 
     private val _nickNameJugador1 = MutableLiveData<String>()
     val nickNameJugador1: LiveData<String> = _nickNameJugador1
@@ -175,9 +181,13 @@ class BJMultiViewModel(application: Application) : AndroidViewModel(application)
      */
     private fun cambiaTurno() {
         if (_cambioTurno.value == 1) {
+            _mostrarCartasJ2.value = true
+            _mostrarCartasJ1.value = false
             _cambioTurno.value = 2
         }
         else{
+            _mostrarCartasJ1.value = true
+            _mostrarCartasJ2.value = false
             _cambioTurno.value = 1
         }
     }
