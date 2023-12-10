@@ -1,7 +1,6 @@
 package com.example.blackjack_jetpackcompose.data
 
 import android.content.Context
-import com.example.blackjack_jetpackcompose.R
 
 class Baraja {
     companion object {
