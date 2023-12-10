@@ -20,7 +20,7 @@ import java.util.ArrayList
 class BJMultiViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
-    val context = getApplication<Application>().applicationContext
+    private val context = getApplication<Application>().applicationContext
 
     private val _configJugadores = MutableLiveData<Boolean>()
     val configJugadores: LiveData<Boolean> = _configJugadores
