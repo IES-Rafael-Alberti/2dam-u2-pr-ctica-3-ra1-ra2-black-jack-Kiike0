@@ -130,7 +130,10 @@ fun ConfigJugadores(
                         )
                         .padding(18.dp)
                 ) {
-                    TituloDialogo(text = "Configuración del juego")
+                    TituloDialogo(
+                        text = "Configuración del juego",
+                        viewModel
+                    )
                     ElementoNick(
                         viewModel,
                         idJugador = 1,
@@ -159,21 +162,38 @@ fun ConfigJugadores(
  * Función composable que representa la composición de un título.
  *
  * @param text El texto que se mostrará como título.
+ * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  */
 @Composable
-fun TituloDialogo(text: String) {
+fun TituloDialogo(
+    text: String,
+    viewModel: BJMultiViewModel
+    ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = text,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 20.sp,
-            color = Color.White,
-            modifier = Modifier
-                .padding(bottom = 10.dp)
-        )
+        if(viewModel.conseguidoBlackJack.value == true){
+            Text(
+                text = text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+            )
+        } else {
+            Text(
+                text = text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(bottom = 10.dp)
+            )
+
+        }
+
     }
 }
 
@@ -336,7 +356,10 @@ fun EndGameDialog(
                     .padding(all = 20.dp)
                     .fillMaxWidth()
             ) {
-                TituloDialogo(text = viewModel.getGanador())
+                TituloDialogo(
+                    text = viewModel.getGanador(),
+                    viewModel
+                )
                 BotonesEndGameDialog(
                     viewModel,
                     navController
@@ -509,7 +532,7 @@ fun Jugador1(
         style = TextStyle(
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp
+            fontSize = 20.sp
         )
     )
     BotonesJugador(
@@ -538,7 +561,7 @@ fun Jugador2(
         style = TextStyle(
             color = Color.White,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp
+            fontSize =20.sp
         )
     )
     BotonesJugador(
@@ -566,7 +589,10 @@ fun BotonesJugador(
 
     Row {
         Button(
-            modifier = Modifier.padding(end = 5.dp),
+            modifier = Modifier
+                .padding(end = 5.dp)
+                .height(50.dp)
+                .width(120.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
@@ -580,6 +606,9 @@ fun BotonesJugador(
             Text(text = "Carta")
         }
         Button(
+            modifier = Modifier
+                .height(50.dp)
+                .width(120.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(

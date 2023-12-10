@@ -25,6 +25,9 @@ class BJMultiViewModel(application: Application) : AndroidViewModel(application)
     private val _configJugadores = MutableLiveData<Boolean>()
     val configJugadores: LiveData<Boolean> = _configJugadores
 
+    private val _conseguidoBlackJack = MutableLiveData<Boolean>()
+    val conseguidoBlackJack: LiveData<Boolean> = _conseguidoBlackJack
+
     private val _gameOverDialog = MutableLiveData<Boolean>()
     val gameOverDialog: LiveData<Boolean> = _gameOverDialog
 
@@ -279,15 +282,19 @@ class BJMultiViewModel(application: Application) : AndroidViewModel(application)
     fun getGanador(): String {
         return when {
             _jugador1.value!!.puntos == 21 && _jugador2.value!!.puntos != 21 -> {
+                _conseguidoBlackJack.value = true
                 "¡Ha ganado ${_jugador1.value!!.nick} con un Blackjack!"
             }
             _jugador2.value!!.puntos == 21 && _jugador1.value!!.puntos != 21 -> {
+                _conseguidoBlackJack.value = true
                 "¡Ha ganado ${_jugador2.value!!.nick} con un Blackjack!"
             }
             _jugador1.value!!.puntos < 21 && (_jugador1.value!!.puntos > _jugador2.value!!.puntos || _jugador2.value!!.puntos > 21) -> {
+                _conseguidoBlackJack.value = false
                 "¡Ha ganado ${_jugador1.value!!.nick}!"
             }
             _jugador2.value!!.puntos < 21 -> {
+                _conseguidoBlackJack.value = false
                 "¡Ha ganado ${_jugador2.value!!.nick}!"
             }
             else -> {
