@@ -3,6 +3,7 @@ package com.example.blackjack_jetpackcompose.screens
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -481,7 +482,13 @@ fun ElementoCarta(carta: Carta) {
     Image(
         modifier = Modifier
             .height(240.dp)
-            .padding(vertical = 10.dp),
+            .padding(vertical = 10.dp)
+            .border(
+                width = 2.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clip(RoundedCornerShape(8.dp)),
         painter = painterResource(id = carta.idDrawable),
         contentDescription = "${carta.nombre} de ${carta.palo}"
     )
