@@ -495,6 +495,7 @@ fun MultijugadorLayout(
  * Función composable que representa un objeto de tipo carta en la mano del jugador.
  *
  * @param carta La carta que se va a mostrar
+ * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack
  */
 @Composable
 fun ElementoCartaJ1(
@@ -517,13 +518,7 @@ fun ElementoCartaJ1(
         )
     } else {
         Image(
-            painter = painterResource(
-                id = viewModel.context.resources.getIdentifier(
-                    "reverso",
-                    "drawable",
-                    viewModel.context.packageName
-                )
-            ),
+            painter = painterResource(id = R.drawable.reverso),
             contentDescription = "reverso carta",
             modifier = Modifier
                 .height(240.dp)
@@ -543,6 +538,7 @@ fun ElementoCartaJ1(
  * Función composable que representa un objeto de tipo carta en la mano del jugador.
  *
  * @param carta La carta que se va a mostrar
+ * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack
  */
 @Composable
 fun ElementoCartaJ2(
@@ -565,13 +561,7 @@ fun ElementoCartaJ2(
         )
     } else {
         Image(
-            painter = painterResource(
-                id = viewModel.context.resources.getIdentifier(
-                    "reverso",
-                    "drawable",
-                    viewModel.context.packageName
-                )
-            ),
+            painter = painterResource(id = R.drawable.reverso),
             contentDescription = "reverso carta",
             modifier = Modifier
                 .height(240.dp)
