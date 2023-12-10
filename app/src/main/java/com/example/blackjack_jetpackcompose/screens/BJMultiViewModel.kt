@@ -272,6 +272,7 @@ class BJMultiViewModel(application: Application) : AndroidViewModel(application)
 
     /**
      * Determina el ganador del juego según los puntos de los jugadores.
+     * Además si ha conseguido 21 justo, ha ganado con un BlackJack!
      *
      * @return Una cadena que indica el ganador o si han empatado
      */

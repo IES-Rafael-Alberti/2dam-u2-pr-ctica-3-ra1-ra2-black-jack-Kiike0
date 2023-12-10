@@ -434,7 +434,7 @@ fun MultijugadorLayout(
                 modifier = Modifier
                     .weight(3f)
             ) {
-                //Jugador 1, visualización de sus cartas
+                //Visualización de sus cartas de cada jugador
                 items(viewModel.getCartasJugador(1)) { card ->
                     ElementoCarta(carta = card)
                 }
@@ -446,7 +446,6 @@ fun MultijugadorLayout(
                 modifier = Modifier
                     .weight(3f)
             ) {
-                //Jugador 2, visualización de sus cartas
                 items(viewModel.getCartasJugador(2)) { card ->
                     ElementoCarta(carta = card)
                 }
