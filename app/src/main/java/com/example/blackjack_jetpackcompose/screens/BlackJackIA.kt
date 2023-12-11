@@ -44,24 +44,23 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import com.example.blackjack_jetpackcompose.R
-import com.example.blackjack_jetpackcompose.data.Routes
 import com.example.blackjack_jetpackcompose.data.Carta
-
+import com.example.blackjack_jetpackcompose.data.Routes
 
 /**
- * Función Composable que representa la pantalla para el juego de BlackJack Jugador vs Jugador
+ * Función Composable que representa la pantalla para el juego de BlackJack Jugador vs Máquina
  *
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  */
 @Composable
-fun PantallaMultijugadorInicial(
+fun PantallavsBotInicial(
     navController: NavHostController,
-    viewModel: BlackJackMultiViewModel
+    viewModel: BlackJackIAViewModel
 ) {
     val configJugadores: Boolean by viewModel.configJugadores.observeAsState(initial = true)
     val showEndGameDialog: Boolean by viewModel.gameOverDialog.observeAsState(initial = false)
-    val actualizacionCartasJugador: Boolean by viewModel.actualizarCartasJg.observeAsState(initial = false)
+    val actualizacionCartas: Boolean by viewModel.actualizarCartas.observeAsState(initial = false)
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -75,22 +74,22 @@ fun PantallaMultijugadorInicial(
                 .clip(MaterialTheme.shapes.medium),
             contentScale = ContentScale.Crop
         )
-        ConfigJugadores(
+        ConfigJugador(
             navController,
             viewModel,
             configJugadores
         ) { viewModel.onDismissConfigDialog() }
 
-        EndGameDialog(
+        EndGameDlg(
             navController,
             viewModel,
             showEndGameDialog
         )
 
-        MultijugadorLayout(
+        BotLayout(
             viewModel,
             configJugadores,
-            actualizacionCartasJugador
+            actualizacionCartas
         )
 
 
@@ -99,24 +98,23 @@ fun PantallaMultijugadorInicial(
 }
 
 /**
- * Función composable que representa el cuadro de diálogo de configuración para establecer los nicks de los jugadores.
+ * Función composable que representa el cuadro de diálogo de configuración para establecer el nick del jugador.
  *
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- * @param configJugadores Flag indicating whether the configuration dialog is visible.
+ * @param configJugador Flag indicating whether the configuration dialog is visible.
  * @param onDissmiss Callback function for dismissing the dialog.
  */
 @Composable
-fun ConfigJugadores(
+fun ConfigJugador(
     navController: NavHostController,
-    viewModel: BlackJackMultiViewModel,
-    configJugadores: Boolean,
+    viewModel: BlackJackIAViewModel,
+    configJugador: Boolean,
     onDissmiss: () -> Unit
 ) {
-    val nickNameJugador1: String by viewModel.nickNameJugador1.observeAsState(initial = "")
-    val nickNameJugador2: String by viewModel.nickNameJugador2.observeAsState(initial = "")
+    val nickName: String by viewModel.nickName.observeAsState(initial = "")
 
-    if (configJugadores) {
+    if (configJugador) {
         Dialog(
             onDismissRequest = { onDissmiss() },
             properties = DialogProperties(dismissOnClickOutside = false),
@@ -126,27 +124,21 @@ fun ConfigJugadores(
                     modifier = Modifier
                         .background(
                             Color.DarkGray,
-                            MaterialTheme.shapes.medium // Ajusta la forma del recorte para redondear las esquinas
+                            MaterialTheme.shapes.medium
                         )
                         .padding(18.dp)
                 ) {
-                    TituloDialogo(
+                    TituloDlg(
                         text = "Configuración del juego",
                         viewModel
                     )
-                    ElementoNick(
+                    ElementNick(
                         viewModel,
                         idJugador = 1,
                         drawable = R.drawable.jugador1,
-                        nickNameJugador1
+                        nickName
                     )
-                    ElementoNick(
-                        viewModel,
-                        idJugador = 2,
-                        drawable = R.drawable.jugador2,
-                        nickNameJugador2
-                    )
-                    Botones(
+                    Btns(
                         navController,
                         viewModel
                     )
@@ -165,10 +157,10 @@ fun ConfigJugadores(
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  */
 @Composable
-fun TituloDialogo(
+fun TituloDlg(
     text: String,
-    viewModel: BlackJackMultiViewModel
-    ) {
+    viewModel: BlackJackIAViewModel
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
@@ -206,8 +198,8 @@ fun TituloDialogo(
  * @param nickNamePlayer El nick actual del jugador o jugadora.
  */
 @Composable
-fun ElementoNick(
-    viewModel: BlackJackMultiViewModel,
+fun ElementNick(
+    viewModel: BlackJackIAViewModel,
     idJugador: Int,
     @DrawableRes drawable: Int,
     nickNamePlayer: String
@@ -238,23 +230,23 @@ fun ElementoNick(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            RellenarNick(
+            Nick(
                 value = nickNamePlayer,
-                onValueChange = { viewModel.onNickNameChange(idJugador, it) }
+                onValueChange = { viewModel.onNickNameChange(it) }
             )
         }
     }
 }
 
 /**
- * Función que representa el recuadro para rellenar los nicks que elijamos
+ * Función que representa el recuadro para rellenar el nick que elijamos
  *
  * @param value Representa el valor actual del campo de texto
  * @param onValueChange Función lambda que se ejecutará cuando el valor del campo de texto cambie. Toma como parámetro el nuevo valor.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RellenarNick(
+fun Nick(
     value: String,
     onValueChange: (String) -> Unit
 ) {
@@ -287,9 +279,9 @@ fun RellenarNick(
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  */
 @Composable
-fun Botones(
+fun Btns(
     navController: NavHostController,
-    viewModel: BlackJackMultiViewModel
+    viewModel: BlackJackIAViewModel
 ) {
     val btnAceptar: Boolean by viewModel.btnAceptar.observeAsState(initial = false)
 
@@ -328,16 +320,16 @@ fun Botones(
 }
 
 /**
- * Función que representa el diálogo que se muestra al final del juego de Multijugador del BlackJack.
+ * Función que representa el diálogo que se muestra al final del juego del BlackJack.
  *
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  * @param showEndGameDialog Indica si el diálogo de finalización del juego es visible.
  */
 @Composable
-fun EndGameDialog(
+fun EndGameDlg(
     navController: NavHostController,
-    viewModel: BlackJackMultiViewModel,
+    viewModel: BlackJackIAViewModel,
     showEndGameDialog: Boolean
 ) {
     if (showEndGameDialog) {
@@ -356,11 +348,11 @@ fun EndGameDialog(
                     .padding(all = 10.dp)
                     .fillMaxWidth()
             ) {
-                TituloDialogo(
+                TituloDlg(
                     text = viewModel.getGanador(),
                     viewModel
                 )
-                BotonesEndGameDialog(
+                BtnEndGameDialog(
                     viewModel,
                     navController
                 )
@@ -370,13 +362,13 @@ fun EndGameDialog(
 }
 
 /**
- * Función que representa los botones comunes para el diálogo de fin de juego.
+ * Función que representa los botones para el diálogo de fin de juego.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  */
 @Composable
-fun BotonesEndGameDialog(viewModel: BlackJackMultiViewModel, navController: NavHostController) {
+fun BtnEndGameDialog(viewModel: BlackJackIAViewModel, navController: NavHostController) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -414,24 +406,23 @@ fun BotonesEndGameDialog(viewModel: BlackJackMultiViewModel, navController: NavH
 }
 
 /**
- * Función composable que representa el diseño del Multijugador del BlackJack.
+ * Función composable que representa el diseño del Jugador vs IA del BlackJack.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- * @param configJugadores Indica si el cuadro de diálogo de configuración está visible.
+ * @param configJugador Indica si el cuadro de diálogo de configuración está visible.
  * @param actualizacionCartasJugador Indica si las tarjetas de jugador deben actualizarse.
  */
 @Suppress("UNUSED_PARAMETER")
 @Composable
-fun MultijugadorLayout(
-    viewModel: BlackJackMultiViewModel,
-    configJugadores: Boolean,
+fun BotLayout(
+    viewModel: BlackJackIAViewModel,
+    configJugador: Boolean,
     actualizacionCartasJugador: Boolean
 ) {
-    val plantarJugador1: Boolean by viewModel.plantarJugador1.observeAsState(initial = false)
-    val plantarJugador2: Boolean by viewModel.plantarJugador2.observeAsState(initial = false)
+    val plantarJugador1: Boolean by viewModel.plantarJugador.observeAsState(initial = false)
     val turnoJugador: Int by viewModel.cambioTurno.observeAsState(initial = 1)
 
-    if (!configJugadores) {
+    if (!configJugador) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -444,7 +435,7 @@ fun MultijugadorLayout(
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Jugador1(
+                Player(
                     viewModel,
                     plantarJugador1,
                     turnoJugador
@@ -459,7 +450,7 @@ fun MultijugadorLayout(
             ) {
                 //Visualización de sus cartas de cada jugador
                 items(viewModel.getCartasJugador(1)) { card ->
-                    ElementoCartaJ1(carta = card, viewModel)
+                    ElementoCartaJg(carta = card)
                 }
             }
             LazyRow(
@@ -470,7 +461,7 @@ fun MultijugadorLayout(
                     .weight(3f)
             ) {
                 items(viewModel.getCartasJugador(2)) { card ->
-                    ElementoCartaJ2(carta = card, viewModel)
+                    ElementoCartaIA(carta = card, viewModel)
                 }
             }
             Column(
@@ -481,10 +472,8 @@ fun MultijugadorLayout(
                 horizontalAlignment = Alignment.CenterHorizontally
             )
             {
-                Jugador2(
-                    viewModel,
-                    plantarJugador2,
-                    turnoJugador
+                IAPlayer(
+                    viewModel
                 )
             }
         }
@@ -495,14 +484,11 @@ fun MultijugadorLayout(
  * Función composable que representa un objeto de tipo carta en la mano del jugador.
  *
  * @param carta La carta que se va a mostrar
- * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack
  */
 @Composable
-fun ElementoCartaJ1(
-    carta: Carta,
-    viewModel : BlackJackMultiViewModel
+fun ElementoCartaJg(
+    carta: Carta
 ) {
-    if(viewModel.mostrarCartasJ1.value==true){
         Image(
             modifier = Modifier
                 .height(240.dp)
@@ -516,21 +502,6 @@ fun ElementoCartaJ1(
             painter = painterResource(id = carta.idDrawable),
             contentDescription = "${carta.nombre} de ${carta.palo}"
         )
-    } else {
-        Image(
-            painter = painterResource(id = R.drawable.reverso),
-            contentDescription = "reverso carta",
-            modifier = Modifier
-                .height(240.dp)
-                .padding(vertical = 10.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .clip(RoundedCornerShape(8.dp))
-        )
-    }
 
 }
 
@@ -541,11 +512,11 @@ fun ElementoCartaJ1(
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack
  */
 @Composable
-fun ElementoCartaJ2(
+fun ElementoCartaIA(
     carta: Carta,
-    viewModel : BlackJackMultiViewModel
+    viewModel : BlackJackIAViewModel
 ) {
-    if(viewModel.mostrarCartasJ2.value==true){
+    if(viewModel.mostrarCartasIA.value==true){
         Image(
             modifier = Modifier
                 .height(240.dp)
@@ -578,19 +549,19 @@ fun ElementoCartaJ2(
 }
 
 /**
- * Función que representa la interfaz de usuario del jugador 1.
+ * Función que representa la interfaz de usuario del jugador.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  * @param plantaJugador1 Indica si el jugador 1 ha elegido seguir o plantarse.
  * @param turnoJugador Turno del jugador actual.
  */
 @Composable
-fun Jugador1(
-    viewModel: BlackJackMultiViewModel,
+fun Player(
+    viewModel: BlackJackIAViewModel,
     plantaJugador1: Boolean,
     turnoJugador: Int,
 ) {
-    if(viewModel.mostrarCartasJ1.value==true){
+
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
             text = viewModel.infoJugador(1),
@@ -600,8 +571,8 @@ fun Jugador1(
                 fontSize = 20.sp
             )
         )
-    }
-    BotonesJugador(
+
+    BtnsJugador(
         viewModel = viewModel,
         jugadorId = 1,
         plantaJugador = plantaJugador1,
@@ -609,19 +580,15 @@ fun Jugador1(
 }
 
 /**
- * Función que representa la interfaz de usuario del jugador 2.
+ * Función que representa la interfaz de usuario de la Máquina.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- * @param plantaJugador2 Indica si el jugador 2 ha elegido seguir o plantarse.
- * @param turnoJugador Turno del jugador actual.
  */
 @Composable
-fun Jugador2(
-    viewModel: BlackJackMultiViewModel,
-    plantaJugador2: Boolean,
-    turnoJugador: Int
+fun IAPlayer(
+    viewModel: BlackJackIAViewModel
 ) {
-    if(viewModel.mostrarCartasJ2.value==true){
+    if(viewModel.mostrarCartasIA.value==true){
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
             text = viewModel.infoJugador(2),
@@ -632,11 +599,6 @@ fun Jugador2(
             )
         )
     }
-    BotonesJugador(
-        viewModel = viewModel,
-        jugadorId = 2,
-        plantaJugador = plantaJugador2,
-        turnoJugador = turnoJugador)
 }
 
 /**
@@ -648,8 +610,8 @@ fun Jugador2(
  * @param turnoJugador Turno del jugador actual.
  */
 @Composable
-fun BotonesJugador(
-    viewModel: BlackJackMultiViewModel,
+fun BtnsJugador(
+    viewModel: BlackJackIAViewModel,
     jugadorId: Int,
     plantaJugador: Boolean,
     turnoJugador: Int
@@ -684,7 +646,7 @@ fun BotonesJugador(
                 contentColor = Color.White
             ),
             onClick = {
-                viewModel.plantaJugador(jugadorId, plantarse = true, cambioTurno = true)
+                viewModel.plantaJugador(plantarse = true, cambioTurno = true)
             }
         ) {
             Text(text = "Plantarse")
@@ -692,5 +654,3 @@ fun BotonesJugador(
     }
 
 }
-
-

@@ -14,13 +14,16 @@ import androidx.navigation.compose.rememberNavController
 import com.example.blackjack_jetpackcompose.data.Routes
 import com.example.blackjack_jetpackcompose.screens.PantallaJuego
 import com.example.blackjack_jetpackcompose.screens.PantallaMultijugadorInicial
-import com.example.blackjack_jetpackcompose.screens.BJMultiViewModel
+import com.example.blackjack_jetpackcompose.screens.BlackJackMultiViewModel
+import com.example.blackjack_jetpackcompose.screens.BlackJackIAViewModel
 import com.example.blackjack_jetpackcompose.screens.MenuViewModel
+import com.example.blackjack_jetpackcompose.screens.PantallavsBotInicial
 import com.example.blackjack_jetpackcompose.ui.theme.BlackJack_JetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val bJMultiviewModel: BJMultiViewModel by viewModels()
+    private val bJBotviewModel: BlackJackIAViewModel by viewModels()
+    private val bJMultiviewModel: BlackJackMultiViewModel by viewModels()
     private val menuViewModel: MenuViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +51,12 @@ class MainActivity : ComponentActivity() {
                             PantallaMultijugadorInicial(
                                 navController = navController,
                                 viewModel = bJMultiviewModel
+                            )
+                        }
+                        composable(Routes.BotScreen.route) {
+                            PantallavsBotInicial(
+                                navController = navController,
+                                viewModel = bJBotviewModel
                             )
                         }
                     }

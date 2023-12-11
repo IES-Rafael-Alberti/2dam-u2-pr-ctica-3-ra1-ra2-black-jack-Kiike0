@@ -17,7 +17,7 @@ import java.util.ArrayList
  *
  * @param application El contexto de la aplicación utilizado para inicializar ViewModel.
  */
-class BJMultiViewModel(application: Application) : AndroidViewModel(application) {
+class BlackJackMultiViewModel(application: Application) : AndroidViewModel(application) {
 
     @SuppressLint("StaticFieldLeak")
     private val context = getApplication<Application>().applicationContext

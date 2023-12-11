@@ -15,4 +15,9 @@ sealed class Routes(val route: String) {
      * Objeto que representa la pantalla del Multijugador.
      */
     object MultiScreen : Routes("multiScreen")
+
+    /**
+     * Objeto que representa la pantalla de Jugador vs IA.
+     */
+    object BotScreen : Routes("botScreen")
 }

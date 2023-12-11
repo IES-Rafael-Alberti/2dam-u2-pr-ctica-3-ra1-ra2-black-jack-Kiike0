@@ -69,7 +69,21 @@ fun PantallaJuego(
                 Text(text = "Jugador vs Jugador", fontSize = 20.sp)
             }
 
-            // Aquí irá el botón para ir a la opción contra la IA
+            // Ell botón para ir a la opción contra la IA
+            Button(
+                onClick = { navController.navigate(Routes.BotScreen.route) },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .width(240.dp)
+                    .height(100.dp)
+                    .padding(top = 10.dp)
+            ) {
+                Text(text = "Jugador vs Bot", fontSize = 20.sp)
+            }
 
             // Botón para salir de programa
             Button(
