@@ -419,7 +419,8 @@ fun BotLayout(
     configJugador: Boolean,
     actualizacionCartasJugador: Boolean
 ) {
-    val plantarJugador1: Boolean by viewModel.plantarJugador.observeAsState(initial = false)
+    val plantarJugador: Boolean by viewModel.plantarJugador.observeAsState(initial = false)
+    val plantarJugadorIA: Boolean by viewModel.plantarJugadorIA.observeAsState(initial = false)
     val turnoJugador: Int by viewModel.cambioTurno.observeAsState(initial = 1)
 
     if (!configJugador) {
@@ -437,7 +438,7 @@ fun BotLayout(
             {
                 Player(
                     viewModel,
-                    plantarJugador1,
+                    plantarJugador,
                     turnoJugador
                 )
             }
@@ -473,7 +474,9 @@ fun BotLayout(
             )
             {
                 IAPlayer(
-                    viewModel
+                    viewModel,
+                    plantarJugadorIA,
+                    turnoJugador
                 )
             }
         }
@@ -552,14 +555,14 @@ fun ElementoCartaIA(
  * Función que representa la interfaz de usuario del jugador.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- * @param plantaJugador1 Indica si el jugador 1 ha elegido seguir o plantarse.
+ * @param plantaJugador Indica si el jugador 1 ha elegido seguir o plantarse.
  * @param turnoJugador Turno del jugador actual.
  */
 @Composable
 fun Player(
     viewModel: BlackJackIAViewModel,
-    plantaJugador1: Boolean,
-    turnoJugador: Int,
+    plantaJugador: Boolean,
+    turnoJugador: Int
 ) {
 
     Text(
@@ -572,10 +575,10 @@ fun Player(
         )
     )
 
-    BtnsJugador(
+    BtnJugador(
         viewModel = viewModel,
         jugadorId = 1,
-        plantaJugador = plantaJugador1,
+        plantaJugador = plantaJugador,
         turnoJugador = turnoJugador
     )
 }
@@ -584,10 +587,14 @@ fun Player(
  * Función que representa la interfaz de usuario de la Máquina.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
+ * @param plantaJugadorIA Indica si el bot ha elegido seguir o plantarse.
+ * @param turnoJugador Turno del jugador actual.
  */
 @Composable
 fun IAPlayer(
-    viewModel: BlackJackIAViewModel
+    viewModel: BlackJackIAViewModel,
+    plantaJugadorIA: Boolean,
+    turnoJugador: Int
 ) {
     if (viewModel.mostrarCartasIA.value == true) {
         Text(
@@ -600,6 +607,10 @@ fun IAPlayer(
             )
         )
     }
+
+    //Implementar aquí lo que hace la máquina
+    //Por ejemplo if lo que sea pide carta else se planta
+    //viewModel.dameCarta(idJugador = 3) //El id del bot podría ser 3 por ejemplo
 }
 
 /**
@@ -611,7 +622,7 @@ fun IAPlayer(
  * @param turnoJugador Turno del jugador actual.
  */
 @Composable
-fun BtnsJugador(
+fun BtnJugador(
     viewModel: BlackJackIAViewModel,
     jugadorId: Int,
     plantaJugador: Boolean,
