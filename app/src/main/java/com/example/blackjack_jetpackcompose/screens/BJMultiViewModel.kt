@@ -12,7 +12,7 @@ import com.example.blackjack_jetpackcompose.data.Jugador
 import java.util.ArrayList
 
 /**
- * ViewModel para el juego del Blackjack.
+ * ViewModel para el juego del Blackjack Multijugador.
  * Esta clase gestiona la lógica del juego y la interacción de la interfaz de usuario.
  *
  * @param application El contexto de la aplicación utilizado para inicializar ViewModel.

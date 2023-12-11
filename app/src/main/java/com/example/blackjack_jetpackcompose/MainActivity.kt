@@ -15,11 +15,14 @@ import com.example.blackjack_jetpackcompose.data.Routes
 import com.example.blackjack_jetpackcompose.screens.PantallaJuego
 import com.example.blackjack_jetpackcompose.screens.PantallaMultijugadorInicial
 import com.example.blackjack_jetpackcompose.screens.BJMultiViewModel
+import com.example.blackjack_jetpackcompose.screens.MenuViewModel
 import com.example.blackjack_jetpackcompose.ui.theme.BlackJack_JetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel: BJMultiViewModel by viewModels()
+    private val bJMultiviewModel: BJMultiViewModel by viewModels()
+    private val menuViewModel: MenuViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -37,17 +40,24 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(Routes.GameScreen.route) {
                             PantallaJuego(
-                                navController = navController
+                                navController = navController,
+                                viewModel = menuViewModel
                             )
                         }
                         composable(Routes.MultiScreen.route) {
                             PantallaMultijugadorInicial(
                                 navController = navController,
-                                viewModel = viewModel
+                                viewModel = bJMultiviewModel
                             )
                         }
                     }
                 }
+            }
+        }
+
+        menuViewModel.cerrarPrograma.observe(this) { event ->
+            if (event) {
+                finish()
             }
         }
     }

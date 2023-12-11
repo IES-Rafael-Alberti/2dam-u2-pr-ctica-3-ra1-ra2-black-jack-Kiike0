@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -32,7 +33,8 @@ import com.example.blackjack_jetpackcompose.data.Routes
  */
 @Composable
 fun PantallaJuego(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: MenuViewModel
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -68,6 +70,22 @@ fun PantallaJuego(
             }
 
             // Aquí irá el botón para ir a la opción contra la IA
+
+            // Botón para salir de programa
+            Button(
+                onClick = { viewModel.cerrarPrograma() },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier
+                    .width(240.dp)
+                    .height(100.dp)
+                    .padding(top = 10.dp)
+            ) {
+                Text(text = "Salir", fontSize = 20.sp)
+            }
 
         }
     }
