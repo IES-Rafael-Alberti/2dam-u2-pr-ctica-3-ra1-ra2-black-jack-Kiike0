@@ -165,7 +165,7 @@ fun TituloDlg(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        if(viewModel.conseguidoBlackJack.value == true){
+        if (viewModel.conseguidoBlackJack.value == true) {
             Text(
                 text = text,
                 fontWeight = FontWeight.SemiBold,
@@ -489,19 +489,19 @@ fun BotLayout(
 fun ElementoCartaJg(
     carta: Carta
 ) {
-        Image(
-            modifier = Modifier
-                .height(240.dp)
-                .padding(vertical = 10.dp)
-                .border(
-                    width = 2.dp,
-                    color = Color.Black,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .clip(RoundedCornerShape(8.dp)),
-            painter = painterResource(id = carta.idDrawable),
-            contentDescription = "${carta.nombre} de ${carta.palo}"
-        )
+    Image(
+        modifier = Modifier
+            .height(240.dp)
+            .padding(vertical = 10.dp)
+            .border(
+                width = 2.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clip(RoundedCornerShape(8.dp)),
+        painter = painterResource(id = carta.idDrawable),
+        contentDescription = "${carta.nombre} de ${carta.palo}"
+    )
 
 }
 
@@ -514,9 +514,9 @@ fun ElementoCartaJg(
 @Composable
 fun ElementoCartaIA(
     carta: Carta,
-    viewModel : BlackJackIAViewModel
+    viewModel: BlackJackIAViewModel
 ) {
-    if(viewModel.mostrarCartasIA.value==true){
+    if (viewModel.mostrarCartasIA.value == true) {
         Image(
             modifier = Modifier
                 .height(240.dp)
@@ -562,21 +562,22 @@ fun Player(
     turnoJugador: Int,
 ) {
 
-        Text(
-            modifier = Modifier.padding(bottom = 10.dp),
-            text = viewModel.infoJugador(1),
-            style = TextStyle(
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
-            )
+    Text(
+        modifier = Modifier.padding(bottom = 10.dp),
+        text = viewModel.infoJugador(1),
+        style = TextStyle(
+            color = Color.White,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 20.sp
         )
+    )
 
     BtnsJugador(
         viewModel = viewModel,
         jugadorId = 1,
         plantaJugador = plantaJugador1,
-        turnoJugador = turnoJugador)
+        turnoJugador = turnoJugador
+    )
 }
 
 /**
@@ -588,7 +589,7 @@ fun Player(
 fun IAPlayer(
     viewModel: BlackJackIAViewModel
 ) {
-    if(viewModel.mostrarCartasIA.value==true){
+    if (viewModel.mostrarCartasIA.value == true) {
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
             text = viewModel.infoJugador(2),
