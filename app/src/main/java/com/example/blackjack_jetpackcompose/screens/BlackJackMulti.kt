@@ -92,10 +92,7 @@ fun PantallaMultijugadorInicial(
             configJugadores,
             actualizacionCartasJugador
         )
-
-
     }
-
 }
 
 /**
@@ -150,8 +147,6 @@ fun ConfigJugadores(
             }
         )
     }
-
-
 }
 
 /**
@@ -354,9 +349,7 @@ fun TituloDialogo(
                 modifier = Modifier
                     .padding(bottom = 5.dp)
             )
-
         }
-
     }
 }
 
@@ -522,7 +515,6 @@ fun ElementoCartaJ1(
                 .clip(RoundedCornerShape(8.dp))
         )
     }
-
 }
 
 /**
@@ -565,7 +557,6 @@ fun ElementoCartaJ2(
                 .clip(RoundedCornerShape(8.dp))
         )
     }
-
 }
 
 /**
@@ -683,7 +674,6 @@ fun BotonesJugador(
             Text(text = "Plantarse")
         }
     }
-
 }
 
 

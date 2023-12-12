@@ -48,18 +48,15 @@ fun PantallaJuego(
                 .clip(MaterialTheme.shapes.medium),
             contentScale = ContentScale.Crop
         )
-
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-
             Image(
                 painter = painterResource(id = R.drawable.imgbienvenido),
                 contentDescription = "Bienvenido al BlackJack",
-
+                modifier = Modifier.padding(1.dp)
             )
-
             // Botón para navegar por la pantalla del juego
             Button(
                 onClick = { navController.navigate(Routes.MultiScreen.route) },
@@ -74,7 +71,6 @@ fun PantallaJuego(
             ) {
                 Text(text = "Jugador vs Jugador", fontSize = 20.sp)
             }
-
             // Ell botón para ir a la opción contra la IA
             Button(
                 onClick = { navController.navigate(Routes.BotScreen.route) },
@@ -90,7 +86,6 @@ fun PantallaJuego(
             ) {
                 Text(text = "Jugador vs Bot", fontSize = 20.sp)
             }
-
             // Botón para salir de programa
             Button(
                 onClick = { viewModel.cerrarPrograma() },
@@ -106,8 +101,6 @@ fun PantallaJuego(
             ) {
                 Text(text = "Salir", fontSize = 20.sp)
             }
-
         }
     }
-
 }
