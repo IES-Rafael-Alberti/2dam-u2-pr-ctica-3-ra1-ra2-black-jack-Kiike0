@@ -130,10 +130,6 @@ fun ConfigJugadores(
                         )
                         .padding(18.dp)
                 ) {
-                    TituloDialogo(
-                        text = "Configuración del juego",
-                        viewModel
-                    )
                     ElementoNick(
                         viewModel,
                         idJugador = 1,
@@ -159,45 +155,6 @@ fun ConfigJugadores(
 }
 
 /**
- * Función composable que representa la composición de un título.
- *
- * @param text El texto que se mostrará como título.
- * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- */
-@Composable
-fun TituloDialogo(
-    text: String,
-    viewModel: BlackJackMultiViewModel
-    ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        if(viewModel.conseguidoBlackJack.value == true){
-            Text(
-                text = text,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-            )
-        } else {
-            Text(
-                text = text,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-            )
-
-        }
-
-    }
-}
-
-/**
  * Función que representa un elemento para ingresar el nick de un jugador.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
@@ -213,24 +170,19 @@ fun ElementoNick(
     nickNamePlayer: String
 ) {
     Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .fillMaxWidth()
         ) {
             Image(
                 painter = painterResource(id = drawable),
                 contentDescription = "Imagen Jugador",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(all = 10.dp)
+                    .padding(all = 5.dp)
                     .size(50.dp)
                     .clip(CircleShape)
-            )
-            Text(
-                text = "Jugador $idJugador",
-                fontSize = 16.sp,
-                color = Color.White,
-                modifier = Modifier
-                    .padding(start = 8.dp)
             )
         }
         Box(
@@ -297,7 +249,7 @@ fun Botones(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 25.dp)
+            .padding(top = 10.dp)
     ) {
         Button(
             enabled = btnAceptar,
@@ -370,6 +322,45 @@ fun EndGameDialog(
 }
 
 /**
+ * Función composable que representa la composición de un título.
+ *
+ * @param text El texto que se mostrará como título.
+ * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
+ */
+@Composable
+fun TituloDialogo(
+    text: String,
+    viewModel: BlackJackMultiViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        if (viewModel.conseguidoBlackJack.value == true) {
+            Text(
+                text = text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 15.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(bottom = 5.dp)
+            )
+        } else {
+            Text(
+                text = text,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 20.sp,
+                color = Color.White,
+                modifier = Modifier
+                    .padding(bottom = 5.dp)
+            )
+
+        }
+
+    }
+}
+
+/**
  * Función que representa los botones comunes para el diálogo de fin de juego.
  *
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
@@ -381,7 +372,7 @@ fun BotonesEndGameDialog(viewModel: BlackJackMultiViewModel, navController: NavH
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 30.dp)
+            .padding(top = 10.dp)
     ) {
         Button(
             shape = RoundedCornerShape(10.dp),
@@ -500,9 +491,9 @@ fun MultijugadorLayout(
 @Composable
 fun ElementoCartaJ1(
     carta: Carta,
-    viewModel : BlackJackMultiViewModel
+    viewModel: BlackJackMultiViewModel
 ) {
-    if(viewModel.mostrarCartasJ1.value==true){
+    if (viewModel.mostrarCartasJ1.value == true) {
         Image(
             modifier = Modifier
                 .height(240.dp)
@@ -543,9 +534,9 @@ fun ElementoCartaJ1(
 @Composable
 fun ElementoCartaJ2(
     carta: Carta,
-    viewModel : BlackJackMultiViewModel
+    viewModel: BlackJackMultiViewModel
 ) {
-    if(viewModel.mostrarCartasJ2.value==true){
+    if (viewModel.mostrarCartasJ2.value == true) {
         Image(
             modifier = Modifier
                 .height(240.dp)
@@ -590,7 +581,7 @@ fun Jugador1(
     plantaJugador1: Boolean,
     turnoJugador: Int,
 ) {
-    if(viewModel.mostrarCartasJ1.value==true){
+    if (viewModel.mostrarCartasJ1.value == true) {
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
             text = viewModel.infoJugador(1),
@@ -605,7 +596,8 @@ fun Jugador1(
         viewModel = viewModel,
         jugadorId = 1,
         plantaJugador = plantaJugador1,
-        turnoJugador = turnoJugador)
+        turnoJugador = turnoJugador
+    )
 }
 
 /**
@@ -621,7 +613,7 @@ fun Jugador2(
     plantaJugador2: Boolean,
     turnoJugador: Int
 ) {
-    if(viewModel.mostrarCartasJ2.value==true){
+    if (viewModel.mostrarCartasJ2.value == true) {
         Text(
             modifier = Modifier.padding(bottom = 10.dp),
             text = viewModel.infoJugador(2),
@@ -636,7 +628,8 @@ fun Jugador2(
         viewModel = viewModel,
         jugadorId = 2,
         plantaJugador = plantaJugador2,
-        turnoJugador = turnoJugador)
+        turnoJugador = turnoJugador
+    )
 }
 
 /**
@@ -671,7 +664,7 @@ fun BotonesJugador(
                 viewModel.dameCarta(jugadorId)
             }
         ) {
-            Text(text = "Carta")
+            Text(text = "Pide carta")
         }
         Button(
             modifier = Modifier

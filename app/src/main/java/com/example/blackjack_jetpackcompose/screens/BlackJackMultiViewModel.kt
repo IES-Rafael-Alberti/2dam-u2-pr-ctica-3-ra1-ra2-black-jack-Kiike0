@@ -200,9 +200,9 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
      */
     fun infoJugador(idJugador: Int) : String {
         return if (idJugador == 1) {
-            "${_jugador1.value?.nick ?: "Jugador 1"} - ${_jugador1.value?.puntos ?: 0} puntos"
+            "Jugador ${_jugador1.value?.nick ?: "Jugador 1"} --> ${_jugador1.value?.puntos ?: 0} puntos"
         } else {
-            "${_jugador2.value?.nick ?: "Jugador 2"} - ${_jugador2.value?.puntos ?: 0} puntos"
+            "Jugador ${_jugador2.value?.nick ?: "Jugador 2"} --> ${_jugador2.value?.puntos ?: 0} puntos"
         }
     }
 
