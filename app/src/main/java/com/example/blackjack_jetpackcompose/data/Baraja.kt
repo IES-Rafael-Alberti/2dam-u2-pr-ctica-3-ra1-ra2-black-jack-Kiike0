@@ -2,6 +2,11 @@ package com.example.blackjack_jetpackcompose.data
 
 import android.content.Context
 
+/**
+ * Clase Baraja que representa la baraja de cartas que usamos en el blackjack
+ * En esta clase realizamos métodos que dan comportamiento a la aplicación
+ *
+ */
 class Baraja {
     companion object {
         private var listaCartas: ArrayList<Carta> = arrayListOf()
