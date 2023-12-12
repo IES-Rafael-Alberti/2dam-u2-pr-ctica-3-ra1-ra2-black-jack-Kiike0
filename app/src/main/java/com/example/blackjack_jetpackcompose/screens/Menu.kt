@@ -1,6 +1,7 @@
 package com.example.blackjack_jetpackcompose.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -54,17 +55,23 @@ fun PantallaJuego(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
+            Image(
+                painter = painterResource(id = R.drawable.imgbienvenido),
+                contentDescription = "Bienvenido al BlackJack",
+
+            )
+
             // Botón para navegar por la pantalla del juego
             Button(
                 onClick = { navController.navigate(Routes.MultiScreen.route) },
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
                     contentColor = Color.White
                 ),
                 modifier = Modifier
                     .width(240.dp)
-                    .height(100.dp)
+                    .height(80.dp)
             ) {
                 Text(text = "Jugador vs Jugador", fontSize = 20.sp)
             }
@@ -72,15 +79,15 @@ fun PantallaJuego(
             // Ell botón para ir a la opción contra la IA
             Button(
                 onClick = { navController.navigate(Routes.BotScreen.route) },
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Black,
                     contentColor = Color.White
                 ),
                 modifier = Modifier
                     .width(240.dp)
-                    .height(100.dp)
-                    .padding(top = 10.dp)
+                    .height(80.dp)
+                    .padding(top = 15.dp)
             ) {
                 Text(text = "Jugador vs Bot", fontSize = 20.sp)
             }
@@ -88,15 +95,15 @@ fun PantallaJuego(
             // Botón para salir de programa
             Button(
                 onClick = { viewModel.cerrarPrograma() },
-                shape = RoundedCornerShape(10.dp),
+                shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
+                    containerColor = Color.Red,
                     contentColor = Color.White
                 ),
                 modifier = Modifier
                     .width(240.dp)
-                    .height(100.dp)
-                    .padding(top = 10.dp)
+                    .height(80.dp)
+                    .padding(top = 15.dp)
             ) {
                 Text(text = "Salir", fontSize = 20.sp)
             }
