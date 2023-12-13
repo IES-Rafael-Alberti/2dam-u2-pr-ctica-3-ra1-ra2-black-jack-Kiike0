@@ -16,12 +16,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -61,6 +64,7 @@ fun PantallaMultijugadorInicial(
 ) {
     val configJugadores: Boolean by viewModel.configJugadores.observeAsState(initial = true)
     val showEndGameDialog: Boolean by viewModel.gameOverDialog.observeAsState(initial = false)
+    val showPuntuaciones: Boolean by viewModel.puntuacionesDialog.observeAsState(initial = false)
     val actualizacionCartasJugador: Boolean by viewModel.actualizarCartasJg.observeAsState(initial = false)
 
     Box(
@@ -69,7 +73,7 @@ fun PantallaMultijugadorInicial(
     ) {
         Image(
             painter = painterResource(id = R.drawable.tapete),
-            contentDescription = "carta mostrada",
+            contentDescription = "tapete de fondo",
             modifier = Modifier
                 .fillMaxSize()
                 .clip(MaterialTheme.shapes.medium),
@@ -86,7 +90,11 @@ fun PantallaMultijugadorInicial(
             viewModel,
             showEndGameDialog
         )
-
+        PuntuacionesDialogo(
+            viewModel,
+            navController,
+            showPuntuaciones
+        )
         MultijugadorLayout(
             viewModel,
             configJugadores,
@@ -100,20 +108,20 @@ fun PantallaMultijugadorInicial(
  *
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
- * @param configJugadores Flag indicating whether the configuration dialog is visible.
- * @param onDissmiss Callback function for dismissing the dialog.
+ * @param showConfiguracionDialog Indica si el cuadro de diálogo de configuración está visible.
+ * @param onDissmiss Función de devolución de llamada para cerrar el diálogo.
  */
 @Composable
 fun ConfigJugadores(
     navController: NavHostController,
     viewModel: BlackJackMultiViewModel,
-    configJugadores: Boolean,
+    showConfiguracionDialog: Boolean,
     onDissmiss: () -> Unit
 ) {
     val nickNameJugador1: String by viewModel.nickNameJugador1.observeAsState(initial = "")
     val nickNameJugador2: String by viewModel.nickNameJugador2.observeAsState(initial = "")
 
-    if (configJugadores) {
+    if (showConfiguracionDialog) {
         Dialog(
             onDismissRequest = { onDissmiss() },
             properties = DialogProperties(dismissOnClickOutside = false),
@@ -280,6 +288,7 @@ fun Botones(
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
  * @param showEndGameDialog Indica si el diálogo de finalización del juego es visible.
+ *
  */
 @Composable
 fun EndGameDialog(
@@ -303,6 +312,7 @@ fun EndGameDialog(
                     .padding(all = 10.dp)
                     .fillMaxWidth()
             ) {
+
                 TituloDialogo(
                     text = viewModel.getGanador(),
                     viewModel
@@ -314,6 +324,7 @@ fun EndGameDialog(
             }
         }
     }
+
 }
 
 /**
@@ -344,7 +355,7 @@ fun TituloDialogo(
             Text(
                 text = text,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp,
+                fontSize = 24.sp,
                 color = Color.White,
                 modifier = Modifier
                     .padding(bottom = 5.dp)
@@ -360,7 +371,10 @@ fun TituloDialogo(
  * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
  */
 @Composable
-fun BotonesEndGameDialog(viewModel: BlackJackMultiViewModel, navController: NavHostController) {
+fun BotonesEndGameDialog(
+    viewModel: BlackJackMultiViewModel,
+    navController: NavHostController
+) {
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -388,13 +402,95 @@ fun BotonesEndGameDialog(viewModel: BlackJackMultiViewModel, navController: NavH
                 contentColor = Color.Black
             ),
             onClick = {
-                navController.navigate(Routes.GameScreen.route)
-                viewModel.finalizarJuego()
+                viewModel.setPuntuacionesDialog(true)
+                viewModel.setGameOverDialog(false)
             }
         ) {
-            Text(text = "Cerrar")
+            Text(text = "Puntuaciones")
         }
     }
+    Spacer(modifier = Modifier.height(10.dp))
+    Button(
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color.Red,
+            contentColor = Color.White
+        ),
+        onClick = {
+            navController.navigate(Routes.GameScreen.route)
+            viewModel.finalizarJuego()
+        }
+    ) {
+        Text(text = "Salir")
+    }
+}
+
+/**
+ * Función composable que representa la composición del cuadro de diálogo de las puntuaciones.
+ *
+ * @param viewModel El ViewModel responsable de gestionar la lógica del juego de Blackjack.
+ * @param navController El controlador de navegación utilizado para navegar en las diferentes pantallas.
+ * @param showPuntuaciones Indica si el cuadro de diálogo de las puntuaciones está visible.
+ */
+@Composable
+fun PuntuacionesDialogo(
+    viewModel: BlackJackMultiViewModel,
+    navController: NavHostController,
+    showPuntuaciones: Boolean
+) {
+    if(showPuntuaciones){
+        AlertDialog(
+            onDismissRequest = { navController.navigate(Routes.GameScreen.route) },
+            title = {
+                Text(
+                    text = "Puntuaciones",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentSize(Alignment.Center)
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+            },
+            text = {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    Text(
+                        text = viewModel.getPuntuaciones(),
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        color = Color.Black,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .fillMaxWidth()
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Button(
+                        onClick = {
+                            viewModel.setPuntuacionesDialog(false)
+                            viewModel.setGameOverDialog(true)
+                        },
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color.Red,
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(text = "Salir")
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {},
+            modifier = Modifier
+                .size(180.dp, 240.dp)
+        )
+    }
+
 }
 
 /**
@@ -435,11 +531,11 @@ fun MultijugadorLayout(
                 )
             }
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy((-100).dp),
+                horizontalArrangement = Arrangement.spacedBy((-85).dp),
                 verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(10.dp),
+                contentPadding = PaddingValues(start = 30.dp, 8.dp),
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(1.2f)
             ) {
                 //Visualización de sus cartas de cada jugador
                 items(viewModel.getCartasJugador(1)) { card ->
@@ -447,11 +543,11 @@ fun MultijugadorLayout(
                 }
             }
             LazyRow(
-                horizontalArrangement = Arrangement.spacedBy((-100).dp),
+                horizontalArrangement = Arrangement.spacedBy((-85).dp),
                 verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(10.dp),
+                contentPadding = PaddingValues(start = 30.dp, 8.dp),
                 modifier = Modifier
-                    .weight(3f)
+                    .weight(1.2f)
             ) {
                 items(viewModel.getCartasJugador(2)) { card ->
                     ElementoCartaJ2(carta = card, viewModel)
@@ -490,7 +586,7 @@ fun ElementoCartaJ1(
         Image(
             modifier = Modifier
                 .height(240.dp)
-                .padding(vertical = 10.dp)
+                .padding(vertical = 5.dp)
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -506,7 +602,6 @@ fun ElementoCartaJ1(
             contentDescription = "reverso carta",
             modifier = Modifier
                 .height(240.dp)
-                .padding(vertical = 10.dp)
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -532,7 +627,6 @@ fun ElementoCartaJ2(
         Image(
             modifier = Modifier
                 .height(240.dp)
-                .padding(vertical = 10.dp)
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -548,7 +642,7 @@ fun ElementoCartaJ2(
             contentDescription = "reverso carta",
             modifier = Modifier
                 .height(240.dp)
-                .padding(vertical = 10.dp)
+                .padding(vertical = 5.dp)
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -573,16 +667,48 @@ fun Jugador1(
     turnoJugador: Int,
 ) {
     if (viewModel.mostrarCartasJ1.value == true) {
-        Text(
-            modifier = Modifier.padding(bottom = 10.dp),
-            text = viewModel.infoJugador(1),
-            style = TextStyle(
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
-            )
-        )
+        Card(
+            modifier = Modifier
+                .height(50.dp)
+                .width(340.dp)
+                .border(1.5.dp, Color.Black, shape = RoundedCornerShape(40.dp))
+                .clip(RoundedCornerShape(40.dp))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White, shape = RoundedCornerShape(40.dp))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .background(Color.Transparent)
+                        .height(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.jugador1),
+                        contentDescription = "Imagen jugador 1",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        modifier = Modifier.padding(top = 8.dp),
+                        text = viewModel.infoJugador(1),
+                        style = TextStyle(
+                            color = Color.DarkGray,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp
+                        )
+                    )
+                }
+            }
+        }
     }
+    Spacer(modifier = Modifier.height(10.dp))
     BotonesJugador(
         viewModel = viewModel,
         jugadorId = 1,
@@ -604,23 +730,56 @@ fun Jugador2(
     plantaJugador2: Boolean,
     turnoJugador: Int
 ) {
-    if (viewModel.mostrarCartasJ2.value == true) {
-        Text(
-            modifier = Modifier.padding(bottom = 10.dp),
-            text = viewModel.infoJugador(2),
-            style = TextStyle(
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 20.sp
-            )
-        )
-    }
+    Spacer(modifier = Modifier.height(10.dp))
     BotonesJugador(
         viewModel = viewModel,
         jugadorId = 2,
         plantaJugador = plantaJugador2,
         turnoJugador = turnoJugador
     )
+    Spacer(modifier = Modifier.height(10.dp))
+    if (viewModel.mostrarCartasJ2.value == true) {
+        Card(
+            modifier = Modifier
+                .height(50.dp)
+                .width(340.dp)
+                .border(1.5.dp, Color.Black, shape = RoundedCornerShape(40.dp))
+                .clip(RoundedCornerShape(40.dp))
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White, shape = RoundedCornerShape(40.dp))
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp)
+                        .background(Color.Transparent)
+                        .height(50.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.jugador2),
+                        contentDescription = "Imagen jugador 2",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(CircleShape)
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        modifier = Modifier.padding(top = 8.dp),
+                        text = viewModel.infoJugador(2),
+                        style = TextStyle(
+                            color = Color.DarkGray,
+                            fontWeight = FontWeight.SemiBold,
+                            fontSize = 20.sp
+                        )
+                    )
+                }
+            }
+        }
+    }
 }
 
 /**
@@ -642,8 +801,8 @@ fun BotonesJugador(
     Row {
         Button(
             modifier = Modifier
-                .padding(end = 5.dp)
-                .height(50.dp)
+                .padding(end = 5.dp, bottom = 5.dp)
+                .height(60.dp)
                 .width(120.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
@@ -655,11 +814,12 @@ fun BotonesJugador(
                 viewModel.dameCarta(jugadorId)
             }
         ) {
-            Text(text = "Pide carta")
+            Text(text = "Pide carta", fontSize = 15.sp)
         }
         Button(
             modifier = Modifier
-                .height(50.dp)
+                .padding(end = 5.dp, bottom = 5.dp)
+                .height(60.dp)
                 .width(120.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
@@ -671,7 +831,7 @@ fun BotonesJugador(
                 viewModel.plantaJugador(jugadorId, plantarse = true, cambioTurno = true)
             }
         ) {
-            Text(text = "Plantarse")
+            Text(text = "Plantarse", fontSize = 15.sp)
         }
     }
 }

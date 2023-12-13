@@ -40,6 +40,12 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
     private val _cambioTurno = MutableLiveData<Int>()
     val cambioTurno: LiveData<Int> = _cambioTurno
 
+    private val _puntuacionJ1 = MutableLiveData<String>()
+    private val _puntuacionJ2 = MutableLiveData<String>()
+
+    private val _puntuacionesDialog = MutableLiveData<Boolean>()
+    val puntuacionesDialog: LiveData<Boolean> = _puntuacionesDialog
+
     private val _mostrarCartasJ1 = MutableLiveData<Boolean>()
     val mostrarCartasJ1: LiveData<Boolean> = _mostrarCartasJ1
 
@@ -91,10 +97,34 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
     }
 
     /**
-     * Maneja el clic en los botones que cierran los cuadros de diálogo.
+     * Maneja el clic en los botones que cierran los cuadros de diálogo de la configuración.
      */
     fun onClickCloseDialog() {
         _configJugadores.value = false
+    }
+
+    /**
+     * Maneja el clic en los botones que cierran el cuadro del dialogo de final de juego.
+     */
+    fun setGameOverDialog(valor:Boolean){
+        _gameOverDialog.value = valor
+    }
+
+    /**
+     * Maneja el clic en los botones que cierran los cuadros de diálogo de las puntuaciones.
+     */
+    fun setPuntuacionesDialog(valor:Boolean){
+        _puntuacionesDialog.value = valor
+    }
+
+
+    /**
+     * Muestra las puntuaciones de cada jugador
+     * @return devuelve las puntuaciones de cada jugador
+     */
+    fun getPuntuaciones():String{
+        return "${_jugador1.value?.nick}: ${_puntuacionJ1.value} puntos\n" +
+                "${_jugador2.value?.nick}: ${_puntuacionJ2.value} puntos"
     }
 
 
@@ -200,9 +230,9 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
      */
     fun infoJugador(idJugador: Int) : String {
         return if (idJugador == 1) {
-            "Jugador ${_jugador1.value?.nick ?: "Jugador 1"} --> ${_jugador1.value?.puntos ?: 0} puntos"
+            "${_jugador1.value?.nick ?: "Jugador 1"} tiene ${_jugador1.value?.puntos ?: 0} puntos"
         } else {
-            "Jugador ${_jugador2.value?.nick ?: "Jugador 2"} --> ${_jugador2.value?.puntos ?: 0} puntos"
+            "${_jugador2.value?.nick ?: "Jugador 2"} tiene ${_jugador2.value?.puntos ?: 0} puntos"
         }
     }
 
@@ -290,26 +320,40 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
      * @return Una cadena que indica el ganador o si han empatado
      */
     fun getGanador(): String {
-        return when {
-            _jugador1.value!!.puntos == 21 && _jugador2.value!!.puntos != 21 -> {
-                _conseguidoBlackJack.value = true
-                "¡Ha ganado ${_jugador1.value!!.nick} con un Blackjack!"
+        try {
+            return when {
+                _jugador1.value!!.puntos == 21 && _jugador2.value!!.puntos != 21 -> {
+                    _conseguidoBlackJack.value = true
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Ha ganado ${_jugador1.value!!.nick} con un Blackjack!"
+                }
+                _jugador2.value!!.puntos == 21 && _jugador1.value!!.puntos != 21 -> {
+                    _conseguidoBlackJack.value = true
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Ha ganado ${_jugador2.value!!.nick} con un Blackjack!"
+                }
+                _jugador1.value!!.puntos < 21 && (_jugador1.value!!.puntos > _jugador2.value!!.puntos || _jugador2.value!!.puntos > 21) -> {
+                    _conseguidoBlackJack.value = false
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Ha ganado ${_jugador1.value!!.nick}!"
+                }
+                _jugador2.value!!.puntos < 21 -> {
+                    _conseguidoBlackJack.value = false
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Ha ganado ${_jugador2.value!!.nick}!"
+                }
+                else -> {
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Empate!"
+                }
             }
-            _jugador2.value!!.puntos == 21 && _jugador1.value!!.puntos != 21 -> {
-                _conseguidoBlackJack.value = true
-                "¡Ha ganado ${_jugador2.value!!.nick} con un Blackjack!"
-            }
-            _jugador1.value!!.puntos < 21 && (_jugador1.value!!.puntos > _jugador2.value!!.puntos || _jugador2.value!!.puntos > 21) -> {
-                _conseguidoBlackJack.value = false
-                "¡Ha ganado ${_jugador1.value!!.nick}!"
-            }
-            _jugador2.value!!.puntos < 21 -> {
-                _conseguidoBlackJack.value = false
-                "¡Ha ganado ${_jugador2.value!!.nick}!"
-            }
-            else -> {
-                "¡Empate!"
-            }
+        } catch (e: Exception) {
+            return "Error al determinar al ganador"
         }
     }
 
