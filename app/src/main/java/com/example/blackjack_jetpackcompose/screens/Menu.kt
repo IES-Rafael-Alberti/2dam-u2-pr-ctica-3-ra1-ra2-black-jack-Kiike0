@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -71,13 +72,14 @@ fun PantallaJuego(
                 ),
                 modifier = Modifier
                     .padding(5.dp)
+                    .size(width = 230.dp, height = 60.dp)
             ) {
                 Text(
                     text = "Jugador vs Jugador", fontSize = 15.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold)
             }
-            // Ell botón para ir a la opción contra la IA
+            // El botón para ir a la pantalla contra la IA
             Button(
                 onClick = { navController.navigate(Routes.BotScreen.route) },
                 shape = RoundedCornerShape(20.dp),
@@ -87,6 +89,7 @@ fun PantallaJuego(
                 ),
                 modifier = Modifier
                     .padding(top = 30.dp)
+                    .size(width = 230.dp, height = 60.dp)
             ) {
                 Text(
                     text = "Jugador vs Bot",
@@ -104,6 +107,7 @@ fun PantallaJuego(
                 ),
                 modifier = Modifier
                     .padding(top = 30.dp)
+                    .size(width = 230.dp, height = 60.dp)
             ) {
                 Text(
                     text = "Salir",
