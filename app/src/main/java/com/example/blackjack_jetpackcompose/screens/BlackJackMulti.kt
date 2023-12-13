@@ -40,6 +40,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -173,8 +174,7 @@ fun ElementoNick(
     nickNamePlayer: String
 ) {
     Column {
-        Box(
-            contentAlignment = Alignment.Center,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
@@ -183,16 +183,10 @@ fun ElementoNick(
                 contentDescription = "Imagen Jugador",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .padding(all = 5.dp)
                     .size(50.dp)
                     .clip(CircleShape)
+                    .align(Alignment.CenterVertically)
             )
-        }
-        Box(
-            contentAlignment = Alignment.CenterStart,
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
             RellenarNick(
                 value = nickNamePlayer,
                 onValueChange = { viewModel.onNickNameChange(idJugador, it) }
@@ -213,17 +207,13 @@ fun RellenarNick(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-    Box(
-        contentAlignment = Alignment.CenterStart,
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
+
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
                 .padding(10.dp),
-            label = { Text(text = "Introduce tu nick") },
+            label = { Text(text = "Introduce tu nick", fontFamily = FontFamily.Monospace) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 textColor = Color.White,
                 focusedBorderColor = Color.Red,
@@ -232,7 +222,7 @@ fun RellenarNick(
                 focusedLabelColor = Color.Red
             )
         )
-    }
+
 }
 
 /**
@@ -346,7 +336,8 @@ fun TituloDialogo(
             Text(
                 text = text,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 15.sp,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace,
                 color = Color.White,
                 modifier = Modifier
                     .padding(bottom = 5.dp)
@@ -355,7 +346,8 @@ fun TituloDialogo(
             Text(
                 text = text,
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 24.sp,
+                fontSize = 20.sp,
+                fontFamily = FontFamily.Monospace,
                 color = Color.White,
                 modifier = Modifier
                     .padding(bottom = 5.dp)
@@ -446,6 +438,7 @@ fun PuntuacionesDialogo(
                     text = "Puntuaciones",
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
+                    fontFamily = FontFamily.Monospace,
                     color = Color.Black,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -463,6 +456,7 @@ fun PuntuacionesDialogo(
                         text = viewModel.getPuntuaciones(),
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 14.sp,
+                        fontFamily = FontFamily.Monospace,
                         color = Color.Black,
                         modifier = Modifier
                             .padding(bottom = 10.dp)
@@ -487,7 +481,7 @@ fun PuntuacionesDialogo(
             confirmButton = {},
             dismissButton = {},
             modifier = Modifier
-                .size(180.dp, 240.dp)
+                .size(220.dp, 280.dp)
         )
     }
 
@@ -530,10 +524,11 @@ fun MultijugadorLayout(
                     turnoJugador
                 )
             }
+            Spacer(modifier = Modifier.height(20.dp))
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy((-85).dp),
                 verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(start = 30.dp, 8.dp),
+                contentPadding = PaddingValues(start = 35.dp, 8.dp),
                 modifier = Modifier
                     .weight(1.2f)
             ) {
@@ -542,10 +537,11 @@ fun MultijugadorLayout(
                     ElementoCartaJ1(carta = card, viewModel)
                 }
             }
+            Spacer(modifier = Modifier.height(20.dp))
             LazyRow(
                 horizontalArrangement = Arrangement.spacedBy((-85).dp),
                 verticalAlignment = Alignment.CenterVertically,
-                contentPadding = PaddingValues(start = 30.dp, 8.dp),
+                contentPadding = PaddingValues(start = 35.dp, 8.dp),
                 modifier = Modifier
                     .weight(1.2f)
             ) {
@@ -553,6 +549,7 @@ fun MultijugadorLayout(
                     ElementoCartaJ2(carta = card, viewModel)
                 }
             }
+            Spacer(modifier = Modifier.height(20.dp))
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -585,7 +582,7 @@ fun ElementoCartaJ1(
     if (viewModel.mostrarCartasJ1.value == true) {
         Image(
             modifier = Modifier
-                .height(240.dp)
+                .height(220.dp)
                 .padding(vertical = 5.dp)
                 .border(
                     width = 2.dp,
@@ -601,7 +598,7 @@ fun ElementoCartaJ1(
             painter = painterResource(id = R.drawable.reverso),
             contentDescription = "reverso carta",
             modifier = Modifier
-                .height(240.dp)
+                .height(220.dp)
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -626,7 +623,7 @@ fun ElementoCartaJ2(
     if (viewModel.mostrarCartasJ2.value == true) {
         Image(
             modifier = Modifier
-                .height(240.dp)
+                .height(220.dp)
                 .border(
                     width = 2.dp,
                     color = Color.Black,
@@ -641,7 +638,7 @@ fun ElementoCartaJ2(
             painter = painterResource(id = R.drawable.reverso),
             contentDescription = "reverso carta",
             modifier = Modifier
-                .height(240.dp)
+                .height(220.dp)
                 .padding(vertical = 5.dp)
                 .border(
                     width = 2.dp,
@@ -669,8 +666,8 @@ fun Jugador1(
     if (viewModel.mostrarCartasJ1.value == true) {
         Card(
             modifier = Modifier
-                .height(50.dp)
-                .width(340.dp)
+                .height(40.dp)
+                .width(300.dp)
                 .border(1.5.dp, Color.Black, shape = RoundedCornerShape(40.dp))
                 .clip(RoundedCornerShape(40.dp))
         ) {
@@ -678,6 +675,7 @@ fun Jugador1(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White, shape = RoundedCornerShape(40.dp))
+                    .padding(horizontal = 16.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -691,24 +689,27 @@ fun Jugador1(
                         contentDescription = "Imagen jugador 1",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(50.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
+                            .align(Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
                         text = viewModel.infoJugador(1),
                         style = TextStyle(
                             color = Color.DarkGray,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp
+                            fontSize = 12.sp,
+                            fontFamily = FontFamily.Monospace
                         )
                     )
                 }
             }
         }
     }
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(20.dp))
     BotonesJugador(
         viewModel = viewModel,
         jugadorId = 1,
@@ -728,7 +729,7 @@ fun Jugador1(
 fun Jugador2(
     viewModel: BlackJackMultiViewModel,
     plantaJugador2: Boolean,
-    turnoJugador: Int
+    turnoJugador: Int,
 ) {
     Spacer(modifier = Modifier.height(10.dp))
     BotonesJugador(
@@ -737,12 +738,12 @@ fun Jugador2(
         plantaJugador = plantaJugador2,
         turnoJugador = turnoJugador
     )
-    Spacer(modifier = Modifier.height(10.dp))
+    Spacer(modifier = Modifier.height(20.dp))
     if (viewModel.mostrarCartasJ2.value == true) {
         Card(
             modifier = Modifier
-                .height(50.dp)
-                .width(340.dp)
+                .height(40.dp)
+                .width(300.dp)
                 .border(1.5.dp, Color.Black, shape = RoundedCornerShape(40.dp))
                 .clip(RoundedCornerShape(40.dp))
         ) {
@@ -750,6 +751,7 @@ fun Jugador2(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.White, shape = RoundedCornerShape(40.dp))
+                    .padding(horizontal = 16.dp)
             ) {
                 Row(
                     modifier = Modifier
@@ -763,17 +765,20 @@ fun Jugador2(
                         contentDescription = "Imagen jugador 2",
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .size(50.dp)
+                            .size(30.dp)
                             .clip(CircleShape)
+                            .align(Alignment.CenterVertically)
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        modifier = Modifier.padding(top = 8.dp),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
                         text = viewModel.infoJugador(2),
                         style = TextStyle(
                             color = Color.DarkGray,
                             fontWeight = FontWeight.SemiBold,
-                            fontSize = 20.sp
+                            fontSize = 12.sp,
+                            fontFamily = FontFamily.Monospace
                         )
                     )
                 }
@@ -802,7 +807,7 @@ fun BotonesJugador(
         Button(
             modifier = Modifier
                 .padding(end = 5.dp, bottom = 5.dp)
-                .height(60.dp)
+                .height(50.dp)
                 .width(120.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
@@ -814,12 +819,12 @@ fun BotonesJugador(
                 viewModel.dameCarta(jugadorId)
             }
         ) {
-            Text(text = "Pide carta", fontSize = 15.sp)
+            Text(text = "Pide carta")
         }
         Button(
             modifier = Modifier
                 .padding(end = 5.dp, bottom = 5.dp)
-                .height(60.dp)
+                .height(50.dp)
                 .width(120.dp),
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
@@ -831,7 +836,7 @@ fun BotonesJugador(
                 viewModel.plantaJugador(jugadorId, plantarse = true, cambioTurno = true)
             }
         ) {
-            Text(text = "Plantarse", fontSize = 15.sp)
+            Text(text = "Plantarse")
         }
     }
 }

@@ -230,9 +230,9 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
      */
     fun infoJugador(idJugador: Int) : String {
         return if (idJugador == 1) {
-            "${_jugador1.value?.nick ?: "Jugador 1"} tiene ${_jugador1.value?.puntos ?: 0} puntos"
+            "${_jugador1.value?.nick ?: "Jugador 1"} ${_jugador1.value?.puntos ?: 0} puntos"
         } else {
-            "${_jugador2.value?.nick ?: "Jugador 2"} tiene ${_jugador2.value?.puntos ?: 0} puntos"
+            "${_jugador2.value?.nick ?: "Jugador 2"} ${_jugador2.value?.puntos ?: 0} puntos"
         }
     }
 
@@ -315,7 +315,7 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
 
     /**
      * Determina el ganador del juego según los puntos de los jugadores.
-     * Además si ha conseguido 21 justo, ha ganado con un BlackJack!
+     * Además, si ha conseguido 21 justo, ha ganado con un BlackJack!
      *
      * @return Una cadena que indica el ganador o si han empatado
      */
@@ -334,17 +334,26 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
                     _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
                     "¡Ha ganado ${_jugador2.value!!.nick} con un Blackjack!"
                 }
-                _jugador1.value!!.puntos < 21 && (_jugador1.value!!.puntos > _jugador2.value!!.puntos || _jugador2.value!!.puntos > 21) -> {
-                    _conseguidoBlackJack.value = false
-                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
-                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
-                    "¡Ha ganado ${_jugador1.value!!.nick}!"
-                }
-                _jugador2.value!!.puntos < 21 -> {
-                    _conseguidoBlackJack.value = false
-                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
-                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
-                    "¡Ha ganado ${_jugador2.value!!.nick}!"
+                _jugador1.value!!.puntos < 21 && _jugador2.value!!.puntos < 21 -> {
+                    when {
+                        _jugador1.value!!.puntos > _jugador2.value!!.puntos -> {
+                            _conseguidoBlackJack.value = false
+                            _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                            _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                            "¡Ha ganado ${_jugador1.value!!.nick}!"
+                        }
+                        _jugador2.value!!.puntos > _jugador1.value!!.puntos -> {
+                            _conseguidoBlackJack.value = false
+                            _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                            _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                            "¡Ha ganado ${_jugador2.value!!.nick}!"
+                        }
+                        else -> {
+                            _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                            _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                            "¡Empate!"
+                        }
+                    }
                 }
                 else -> {
                     _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
