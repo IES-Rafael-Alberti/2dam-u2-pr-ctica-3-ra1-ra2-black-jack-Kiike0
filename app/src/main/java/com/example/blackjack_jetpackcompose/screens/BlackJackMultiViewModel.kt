@@ -265,6 +265,7 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
         }
         _plantarJugador1.value = false
         _plantarJugador2.value = false
+        _conseguidoBlackJack.value = false
         _cambioTurno.value = 1
         nuevaBaraja()
         dameCarta(1)
@@ -323,27 +324,40 @@ class BlackJackMultiViewModel(application: Application) : AndroidViewModel(appli
         try {
             return when {
                 _jugador1.value!!.puntos == 21 && _jugador2.value!!.puntos != 21 -> {
+                    // Caso: Si Jugador 1 ha conseguido 21: Blackjack
                     _conseguidoBlackJack.value = true
                     _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
                     _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
                     "¡Ha ganado ${_jugador1.value!!.nick} con un Blackjack!"
                 }
                 _jugador2.value!!.puntos == 21 && _jugador1.value!!.puntos != 21 -> {
+                    // Caso: Si Jugador 2 ha conseguido 21: Blackjack
                     _conseguidoBlackJack.value = true
                     _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
                     _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
                     "¡Ha ganado ${_jugador2.value!!.nick} con un Blackjack!"
                 }
+                _jugador1.value!!.puntos > 21 && _jugador2.value!!.puntos <= 21 -> {
+                    // Caso: Jugador 1 se ha pasado de 21
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Ha ganado ${_jugador2.value!!.nick}!"
+                }
+                _jugador1.value!!.puntos <= 21 && _jugador2.value!!.puntos > 21 -> {
+                    // Caso: Jugador 2 se ha pasado de 21
+                    _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
+                    _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
+                    "¡Ha ganado ${_jugador1.value!!.nick}!"
+                }
                 _jugador1.value!!.puntos < 21 && _jugador2.value!!.puntos < 21 -> {
+                    // Caso: Si ambos jugadores se han plantado antes de 21
                     when {
                         _jugador1.value!!.puntos > _jugador2.value!!.puntos -> {
-                            _conseguidoBlackJack.value = false
                             _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
                             _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
                             "¡Ha ganado ${_jugador1.value!!.nick}!"
                         }
                         _jugador2.value!!.puntos > _jugador1.value!!.puntos -> {
-                            _conseguidoBlackJack.value = false
                             _puntuacionJ1.value = "${_jugador1.value!!.puntos}"
                             _puntuacionJ2.value = "${_jugador2.value!!.puntos}"
                             "¡Ha ganado ${_jugador2.value!!.nick}!"

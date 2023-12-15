@@ -235,6 +235,7 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
         _plantarJugadorIA.value = false
         _puntuacionIA.value = 0
         _mostrarCartasIA.value = false
+        _conseguidoBlackJack.value = false
         nuevaBaraja()
         dameCarta(1)
         dameCarta(2)
