@@ -34,8 +34,7 @@ import com.example.blackjack_jetpackcompose.data.Routes
  */
 @Composable
 fun PantallaJuego(
-    navController: NavHostController,
-    viewModel: MenuViewModel
+    navController: NavHostController
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -97,7 +96,7 @@ fun PantallaJuego(
             }
             // Botón para salir de programa
             Button(
-                onClick = { viewModel.cerrarPrograma() },
+                onClick = { navController.navigate(Routes.GameScreen.route) },
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Red,
@@ -108,7 +107,7 @@ fun PantallaJuego(
                     .size(width = 230.dp, height = 60.dp)
             ) {
                 Text(
-                    text = "Salir",
+                    text = "Volver atrás",
                     fontSize = 15.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold)

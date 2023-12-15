@@ -12,6 +12,16 @@ sealed class Routes(val route: String) {
     object GameScreen : Routes("GameScreen")
 
     /**
+     * Objeto que representa la pantalla del juego del BlackJack.
+     */
+    object MenuBlackJackScreen : Routes("menuBlackJackScreen")
+
+    /**
+     * Objeto que representa la pantalla del juego de la Carta más alta.
+     */
+    object CartaMasAltaScreen : Routes("cartaMasAltaScreen")
+
+    /**
      * Objeto que representa la pantalla del Multijugador.
      */
     object MultiScreen : Routes("multiScreen")

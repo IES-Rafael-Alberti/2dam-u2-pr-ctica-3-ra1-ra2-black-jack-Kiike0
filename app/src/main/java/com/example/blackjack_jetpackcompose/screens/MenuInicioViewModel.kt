@@ -13,7 +13,7 @@ import androidx.lifecycle.MutableLiveData
  *
  * @param application El contexto de la aplicación utilizado para inicializar ViewModel.
  */
-class MenuViewModel(application: Application) : AndroidViewModel(application) {
+class MenuInicioViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _cerrarPrograma = MutableLiveData<Boolean>()
     val cerrarPrograma: LiveData<Boolean> = _cerrarPrograma

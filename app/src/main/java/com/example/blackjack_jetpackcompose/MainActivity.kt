@@ -16,7 +16,10 @@ import com.example.blackjack_jetpackcompose.screens.PantallaJuego
 import com.example.blackjack_jetpackcompose.screens.PantallaMultijugadorInicial
 import com.example.blackjack_jetpackcompose.screens.BlackJackMultiViewModel
 import com.example.blackjack_jetpackcompose.screens.BlackJackIAViewModel
-import com.example.blackjack_jetpackcompose.screens.MenuViewModel
+import com.example.blackjack_jetpackcompose.screens.CartaMasAltaViewModel
+import com.example.blackjack_jetpackcompose.screens.MenuInicioViewModel
+import com.example.blackjack_jetpackcompose.screens.PantallaCartaMasAlta
+import com.example.blackjack_jetpackcompose.screens.PantallaInicial
 import com.example.blackjack_jetpackcompose.screens.PantallavsBotInicial
 import com.example.blackjack_jetpackcompose.ui.theme.BlackJack_JetpackComposeTheme
 
@@ -24,7 +27,8 @@ class MainActivity : ComponentActivity() {
 
     private val bJBotviewModel: BlackJackIAViewModel by viewModels()
     private val bJMultiviewModel: BlackJackMultiViewModel by viewModels()
-    private val menuViewModel: MenuViewModel by viewModels()
+    private val menuInicioViewModel: MenuInicioViewModel by viewModels()
+    private val cartaMasAltaViewModel: CartaMasAltaViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +46,20 @@ class MainActivity : ComponentActivity() {
                         startDestination = Routes.GameScreen.route
                     ) {
                         composable(Routes.GameScreen.route) {
-                            PantallaJuego(
+                            PantallaInicial(
                                 navController = navController,
-                                viewModel = menuViewModel
+                                viewModel = menuInicioViewModel
+                            )
+                        }
+                        composable(Routes.CartaMasAltaScreen.route) {
+                            PantallaCartaMasAlta(
+                                navController = navController,
+                                viewModel = cartaMasAltaViewModel
+                            )
+                        }
+                        composable(Routes.MenuBlackJackScreen.route) {
+                            PantallaJuego(
+                                navController = navController
                             )
                         }
                         composable(Routes.MultiScreen.route) {
@@ -64,7 +79,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        menuViewModel.cerrarPrograma.observe(this) { event ->
+        menuInicioViewModel.cerrarPrograma.observe(this) { event ->
             if (event) {
                 finish()
             }

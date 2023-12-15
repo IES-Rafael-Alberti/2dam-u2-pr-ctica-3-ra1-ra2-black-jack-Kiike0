@@ -262,7 +262,7 @@ fun Botones(
                 contentColor = Color.Black
             ),
             modifier = Modifier.padding(start = 5.dp),
-            onClick = { navController.navigate(Routes.GameScreen.route) }
+            onClick = { navController.navigate(Routes.MenuBlackJackScreen.route) }
         ) {
             Text(text = "Cancelar")
         }
@@ -406,7 +406,7 @@ fun BotonesEndGameDialog(
             contentColor = Color.White
         ),
         onClick = {
-            navController.navigate(Routes.GameScreen.route)
+            navController.navigate(Routes.MenuBlackJackScreen.route)
             viewModel.finalizarJuego()
         }
     ) {
