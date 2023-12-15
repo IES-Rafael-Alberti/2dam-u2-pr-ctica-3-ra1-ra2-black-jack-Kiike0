@@ -15,6 +15,35 @@ import java.util.ArrayList
  * ViewModel para el juego del Blackjack Multijugador.
  * Esta clase gestiona la lógica del juego y la interacción de la interfaz de usuario.
  *
+ * @property _configJugadores LiveData privado que indica si se debe configurar el número de jugadores
+ * @property configJugadores LiveData público que indica si se debe configurar el número de jugadores
+ * @property _conseguidoBlackJack LiveData privado que indica si se ha conseguido un Blackjack durante el juego.
+ * @property conseguidoBlackJack LiveData público que indica si se ha conseguido un Blackjack durante el juego.
+ * @property _gameOverDialog LiveData privado que indica si se debe mostrar un cuadro de diálogo de fin de juego.
+ * @property gameOverDialog LiveData público que indica si se debe mostrar un cuadro de diálogo de fin de juego.
+ * @property _btnAceptar LiveData privado que indica si se ha presionado el botón de aceptar.
+ * @property btnAceptar LiveData público que indica si se ha presionado el botón de aceptar.
+ * @property _jugador1 LiveData privado: Representa al jugador 1.
+ * @property _jugador2 LiveData privado: Representa al jugador 2.
+ * @property _puntuacionJ1 LiveData privado: Puntuación del jugador 1.
+ * @property _puntuacionJ1 LiveData privado: Puntuación del jugador 2.
+ * @property _puntuacionesDialog LiveData privado que indica si se debe mostrar un cuadro de diálogo de puntuaciones.
+ * @property puntuacionesDialog LiveData público que indica si se debe mostrar un cuadro de diálogo de puntuaciones.
+ * @property _mostrarCartasJ1 LiveData privado que indica si se deben mostrar las cartas del Jugador 1.
+ * @property mostrarCartasJ1 LiveData público que indica si se deben mostrar las cartas del Jugador 1.
+ * @property _mostrarCartasJ2 LiveData privado que indica si se deben mostrar las cartas del Jugador 2.
+ * @property mostrarCartasJ2 LiveData público que indica si se deben mostrar las cartas del Jugador 2.
+ * @property _nickNameJugador1 LiveData privado: Nickname o nombre del jugador 1.
+ * @property nickNameJugador1 LiveData público: Nickname o nombre del jugador 1.
+ * @property _nickNameJugador2 LiveData privado: Nickname o nombre del jugador 2.
+ * @property nickNameJugador2 LiveData público: Nickname o nombre del jugador 2.
+ * @property _plantarJugador1 LiveData privado que indica si el jugador 1 ha decidido plantarse.
+ * @property plantarJugador1 LiveData público que indica si el jugador 1 ha decidido plantarse.
+ * @property _plantarJugador2 LiveData privado que indica si el jugador 2 ha decidido plantarse.
+ * @property plantarJugador2 LiveData público que indica si el jugador 2 ha decidido plantarse.
+ * @property _actualizarCartasJg LiveData privado que indica si se deben actualizar las cartas en la interfaz de usuario.
+ * @property actualizarCartasJg LiveData público que indica si se deben actualizar las cartas en la interfaz de usuario.
+ *
  * @param application El contexto de la aplicación utilizado para inicializar ViewModel.
  */
 class BlackJackMultiViewModel(application: Application) : AndroidViewModel(application) {

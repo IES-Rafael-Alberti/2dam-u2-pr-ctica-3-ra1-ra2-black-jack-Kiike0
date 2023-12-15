@@ -62,7 +62,7 @@ fun PantallavsBotInicial(
     navController: NavHostController,
     viewModel: BlackJackIAViewModel
 ) {
-    val configJugadores: Boolean by viewModel.configJugadores.observeAsState(initial = true)
+    val configJugadores: Boolean by viewModel.configJugador.observeAsState(initial = true)
     val showEndGameDialog: Boolean by viewModel.gameOverDialog.observeAsState(initial = false)
     val showPuntuaciones: Boolean by viewModel.puntuacionesDialog.observeAsState(initial = false)
     val actualizacionCartas: Boolean by viewModel.actualizarCartas.observeAsState(initial = false)

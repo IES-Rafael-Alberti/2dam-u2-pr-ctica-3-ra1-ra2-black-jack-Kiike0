@@ -14,7 +14,34 @@ import java.util.ArrayList
  * ViewModel para el juego del Blackjack contra la IA.
  * Esta clase gestiona la lógica del juego y la interacción de la interfaz de usuario.
  *
+ * @property _configJugador LiveData privado que indica si se debe configurar el número de jugadores
+ * @property configJugador LiveData público que indica si se debe configurar el número de jugadores
+ * @property _conseguidoBlackJack LiveData privado que indica si se ha conseguido un Blackjack durante el juego.
+ * @property conseguidoBlackJack LiveData público que indica si se ha conseguido un Blackjack durante el juego.
+ * @property _gameOverDialog LiveData privado que indica si se debe mostrar un cuadro de diálogo de fin de juego.
+ * @property gameOverDialog LiveData público que indica si se debe mostrar un cuadro de diálogo de fin de juego.
+ * @property _btnAceptar LiveData privado que indica si se ha presionado el botón de aceptar.
+ * @property btnAceptar LiveData público que indica si se ha presionado el botón de aceptar.
+ * @property _jugador LiveData privado: Representa al jugador principal.
+ * @property _iaBot LiveData privado: Representa a la IA o bot del juego.
+ * @property _puntuacionJg LiveData privado: Puntuación del jugador principal.
+ * @property _puntuacionIA LiveData privado: Puntuación de la IA o bot del juego.
+ * @property puntuacionIA LiveData público: Puntuación de la IA o bot del juego.
+ * @property _puntuacionesDialog LiveData privado que indica si se debe mostrar un cuadro de diálogo de puntuaciones.
+ * @property puntuacionesDialog LiveData público que indica si se debe mostrar un cuadro de diálogo de puntuaciones.
+ * @property _mostrarCartasIA LiveData privado que indica si se deben mostrar las cartas de la IA.
+ * @property mostrarCartasIA LiveData público que indica si se deben mostrar las cartas de la IA.
+ * @property _nickName LiveData privado: Nickname o nombre del jugador principal.
+ * @property nickName LiveData público: Nickname o nombre del jugador principal.
+ * @property _plantarJugador LiveData privado que indica si el jugador principal ha decidido plantarse.
+ * @property _plantarJugadorIA LiveData privado que indica si la IA ha decidido plantarse.
+ * @property _actualizarCartas LiveData privado que indica si se deben actualizar las cartas en la interfaz de usuario.
+ * @property actualizarCartas LiveData público que indica si se deben actualizar las cartas en la interfaz de usuario.
+ * @property _actualizarPuntuaciones LiveData privado que indica si se deben actualizar las puntuaciones en la interfaz de usuario.
+ * @property actualizarPuntuaciones LiveData público que indica si se deben actualizar las puntuaciones en la interfaz de usuario.
+ *
  * @param application El contexto de la aplicación utilizado para inicializar ViewModel.
+ *
  */
 class BlackJackIAViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -22,7 +49,7 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
     private val context = getApplication<Application>().applicationContext
 
     private val _configJugador = MutableLiveData<Boolean>()
-    val configJugadores: LiveData<Boolean> = _configJugador
+    val configJugador: LiveData<Boolean> = _configJugador
 
     private val _conseguidoBlackJack = MutableLiveData<Boolean>()
     val conseguidoBlackJack: LiveData<Boolean> = _conseguidoBlackJack

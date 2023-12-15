@@ -1,6 +1,7 @@
 package com.example.blackjack_jetpackcompose.data
 
 import android.content.Context
+import android.util.Log
 
 /**
  * Clase Baraja que representa la baraja de cartas que usamos en el blackjack
@@ -10,50 +11,51 @@ import android.content.Context
 class Baraja {
     companion object {
         private var listaCartas: ArrayList<Carta> = arrayListOf()
-        /*init { //Cuando se crea el objeto llama a estos métodos para que se inicialize el funcionamiento
-            crearBaraja()
-            barajar()
-        }*/
 
         /**
          * Crea la baraja a partir de la lista añadiendo las cartas una a una
          * @param context El contecto de la aplicación
          */
         fun crearBaraja(context: Context) {
-            listaCartas.clear()
-            var puntosMin: Int
-            var puntosMax: Int
+            try {
+                listaCartas.clear()
+                var puntosMin: Int
+                var puntosMax: Int
 
-            for (palo in 1..4) {
-                for (cont in 1..13) {
-                    when (cont) {
-                        1 -> {
-                            puntosMin = 1
-                            puntosMax = 11
+                for (palo in 1..4) {
+                    for (cont in 1..13) {
+                        when (cont) {
+                            1 -> {
+                                puntosMin = 1
+                                puntosMax = 11
+                            }
+                            11, 12, 13 -> {
+                                puntosMin = 10
+                                puntosMax = 10
+                            }
+                            else -> {
+                                puntosMin = cont
+                                puntosMax = cont
+                            }
                         }
-                        11, 12, 13 -> {
-                            puntosMin = 10
-                            puntosMax = 10
-                        }
-                        else -> {
-                            puntosMin = cont
-                            puntosMax = cont
-                        }
-                    }
 
-                    listaCartas.add(
-                        Carta(
-                            Naipes.values()[cont],
-                            Palos.values()[palo],
-                            puntosMin,
-                            puntosMax,
-                            getIdDrawable(
-                                context,
-                                "${Palos.values()[palo].toString().lowercase()}_${cont}"
-                            ) //Aqui puedo cambiar a c$cont como lo tenía antes, pero entonces no se usan los palos
+                        listaCartas.add(
+                            Carta(
+                                Naipes.values()[cont],
+                                Palos.values()[palo],
+                                puntosMin,
+                                puntosMax,
+                                getIdDrawable(
+                                    context,
+                                    "${Palos.values()[palo].toString().lowercase()}_${cont}"
+                                ) //Aqui puedo cambiar a c${cont} como lo tenía en otro proyecto, pero entonces no se usan los palos
+                            )
                         )
-                    )
+                    }
                 }
+            } catch (e: Exception) {
+                // Manejar la excepción según tus necesidades
+                Log.e("crearBaraja", "Error al crear la baraja: ${e.message}")
             }
         }
 
