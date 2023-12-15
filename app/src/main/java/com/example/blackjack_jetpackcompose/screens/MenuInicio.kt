@@ -50,29 +50,19 @@ fun PantallaInicial(
                 .clip(MaterialTheme.shapes.medium),
             contentScale = ContentScale.Crop
         )
+        Image(
+            painter = painterResource(id = R.drawable.imgbienvenido),
+            contentDescription = "Bienvenido al BlackJack",
+            modifier = Modifier
+                .padding(top = 150.dp)
+                .align(Alignment.TopCenter)
+        )
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Botón para navegar por la pantalla del juego
-            Button(
-                onClick = { navController.navigate(Routes.CartaMasAltaScreen.route) },
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier
-                    .padding(5.dp)
-                    .size(width = 230.dp, height = 60.dp)
-            ) {
-                Text(
-                    text = "Carta más alta", fontSize = 15.sp,
-                    fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.SemiBold)
-            }
-            // El botón para ir a la pantalla contra la IA
-            Button(
+           Button(
                 onClick = { navController.navigate(Routes.MenuBlackJackScreen.route) },
                 shape = RoundedCornerShape(20.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -84,7 +74,7 @@ fun PantallaInicial(
                     .size(width = 230.dp, height = 60.dp)
             ) {
                 Text(
-                    text = "BlackJack",
+                    text = "Comenzar",
                     fontSize = 15.sp,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.SemiBold)

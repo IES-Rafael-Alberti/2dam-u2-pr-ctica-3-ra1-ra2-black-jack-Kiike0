@@ -136,29 +136,6 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
         _puntuacionesDialog.value = valor
     }
 
-
-    /**
-     * Muestra las puntuaciones de cada jugador
-     * @return devuelve las puntuaciones de cada jugador
-     */
-    fun getPuntuaciones():String{
-        return "${_jugador.value?.nick}: ${_puntuacionJg.value} puntos\n" +
-                "${_iaBot.value?.nick}: ${_puntuacionIA.value} puntos"
-    }
-
-    /**
-     * Fuerza la actualización de las cartas de los jugadores en la Vista.
-     * (truco para forzar la actualizacion de las puntuaciones)
-     */
-    private fun forzarActPuntuaciones(){
-        if (_actualizarPuntuaciones.value == null) {
-            _actualizarPuntuaciones.value = false
-        } else {
-            _actualizarPuntuaciones.value = !_actualizarPuntuaciones.value!!
-        }
-    }
-
-
     /**
      * Maneja los cambios en el nick.
      *
@@ -222,6 +199,67 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /**
+     * Muestra las puntuaciones de cada jugador
+     * @return devuelve las puntuaciones de cada jugador
+     */
+    fun getPuntuaciones():String{
+        return "${_jugador.value?.nick}: ${_puntuacionJg.value} puntos\n" +
+                "${_iaBot.value?.nick}: ${_puntuacionIA.value} puntos"
+    }
+
+    /**
+     * Fuerza la actualización de las cartas de los jugadores en la Vista.
+     * (truco para forzar la actualizacion de las puntuaciones)
+     */
+    private fun forzarActPuntuaciones(){
+        val bot = _iaBot.value!!
+        _puntuacionIA.value=calculoPuntos(bot)
+    }
+
+    /**
+     * Calcula los puntos totales de un jugador en función de sus cartas.
+     *
+     * @param jugador El objeto Jugador para quien se calculan los puntos.
+     */
+    private fun calculoPuntos(jugador: Jugador) : Int {
+        jugador.puntos = 0
+        for (card in jugador.listadeCartas) {
+            jugador.puntos += card.puntosMin
+        }
+        calculoAses(jugador)
+        return jugador.puntos
+    }
+
+    /**
+     * Ajusta los puntos de un jugador para tener en cuenta los ases, permitiendo que un as
+     * cambie su valor de 1 a 11 si el jugador puede seguir jugando sin pasarse de 21.
+     *
+     * @param jugador El objeto Jugador para quien se calculan los puntos.
+     */
+    private fun calculoAses(jugador: Jugador) {
+        var tieneAs = false
+        for (carta in jugador.listadeCartas) {
+            // Verifica si la carta es un as y su valor máximo es 11
+            if (carta.puntosMin != carta.puntosMax && carta.puntosMax == 11) {
+                tieneAs = true
+                break
+            }
+        }
+
+        // Si el jugador tiene un as con valor máximo de 11
+        if (tieneAs) {
+            // Calcula los puntos si el as se contara como 11
+            val puntosConAsMax = jugador.puntos + 10
+            // Verifica si el jugador puede cambiar el valor del as a 10 sin pasarse de 21
+            if (puntosConAsMax <= 21) {
+                // Ajusta los puntos del jugador sumando 10 al valor actual
+                jugador.puntos = puntosConAsMax
+            }
+            // Si el jugador ya tiene 21 puntos o más, el as se contará como 1
+        }
+    }
+
+    /**
      * Genera información del jugador, incluido su nick y puntos.
      *
      * @return Una cadena que contiene información de los puntos de cada jugador y su nick.
@@ -268,47 +306,6 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
         dameCarta(2)
     }
 
-    /**
-     * Calcula los puntos totales de un jugador en función de sus cartas.
-     *
-     * @param jugador El objeto Jugador para quien se calculan los puntos.
-     */
-    private fun calculoPuntos(jugador: Jugador) {
-        jugador.puntos = 0
-        for (card in jugador.listadeCartas) {
-            jugador.puntos += card.puntosMin
-        }
-        calculoAses(jugador)
-    }
-
-    /**
-     * Ajusta los puntos de un jugador para tener en cuenta los ases, permitiendo que un as
-     * cambie su valor de 1 a 11 si el jugador puede seguir jugando sin pasarse de 21.
-     *
-     * @param jugador El objeto Jugador para quien se calculan los puntos.
-     */
-    private fun calculoAses(jugador: Jugador) {
-        var tieneAs = false
-        for (carta in jugador.listadeCartas) {
-            // Verifica si la carta es un as y su valor máximo es 11
-            if (carta.puntosMin != carta.puntosMax && carta.puntosMax == 11) {
-                tieneAs = true
-                break
-            }
-        }
-
-        // Si el jugador tiene un as con valor máximo de 11
-        if (tieneAs) {
-            // Calcula los puntos si el as se contara como 11
-            val puntosConAsMax = jugador.puntos + 10
-            // Verifica si el jugador puede cambiar el valor del as a 10 sin pasarse de 21
-            if (puntosConAsMax <= 21) {
-                // Ajusta los puntos del jugador sumando 10 al valor actual
-                jugador.puntos = puntosConAsMax
-            }
-            // Si el jugador ya tiene 21 puntos o más, el as se contará como 1
-        }
-    }
 
     /**
      * Determina el ganador del juego según los puntos de los jugadores.

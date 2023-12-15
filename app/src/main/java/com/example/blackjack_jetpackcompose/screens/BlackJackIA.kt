@@ -692,10 +692,12 @@ fun BotonesJg(
             onClick = {
                 viewModel.dameCarta(jugadorId)
                 Thread.sleep(1000)
-                if (puntuacionBot < 18)
+                if (puntuacionBot < 18) {
                     viewModel.dameCarta(2)
-                else
+                }
+                else {
                     viewModel.plantaJugador(2, plantarse = true)
+                }
             }
         ) {
             Text(text = "Pide carta")
