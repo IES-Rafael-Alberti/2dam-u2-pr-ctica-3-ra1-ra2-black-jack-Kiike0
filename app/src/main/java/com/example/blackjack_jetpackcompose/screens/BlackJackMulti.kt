@@ -184,7 +184,6 @@ fun ElementoNick(
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(50.dp)
-                    .clip(CircleShape)
                     .align(Alignment.CenterVertically)
             )
             RellenarNick(
@@ -207,7 +206,6 @@ fun RellenarNick(
     value: String,
     onValueChange: (String) -> Unit
 ) {
-
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
@@ -222,7 +220,6 @@ fun RellenarNick(
                 focusedLabelColor = Color.Red
             )
         )
-
 }
 
 /**
@@ -666,15 +663,15 @@ fun Jugador1(
     if (viewModel.mostrarCartasJ1.value == true) {
         Card(
             modifier = Modifier
-                .height(40.dp)
-                .width(300.dp)
-                .border(1.5.dp, Color.Black, shape = RoundedCornerShape(40.dp))
+                .height(50.dp)
+                .width(250.dp)
+                .border(1.5.dp, Color.White, shape = RoundedCornerShape(40.dp))
                 .clip(RoundedCornerShape(40.dp))
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White, shape = RoundedCornerShape(40.dp))
+                    .background(Color.Black, shape = RoundedCornerShape(40.dp))
                     .padding(horizontal = 16.dp)
             ) {
                 Row(
@@ -699,7 +696,7 @@ fun Jugador1(
                             .align(Alignment.CenterVertically),
                         text = viewModel.infoJugador(1),
                         style = TextStyle(
-                            color = Color.DarkGray,
+                            color = Color.White,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace
@@ -742,15 +739,15 @@ fun Jugador2(
     if (viewModel.mostrarCartasJ2.value == true) {
         Card(
             modifier = Modifier
-                .height(40.dp)
-                .width(300.dp)
-                .border(1.5.dp, Color.Black, shape = RoundedCornerShape(40.dp))
+                .height(50.dp)
+                .width(250.dp)
+                .border(1.5.dp, Color.White, shape = RoundedCornerShape(40.dp))
                 .clip(RoundedCornerShape(40.dp))
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.White, shape = RoundedCornerShape(40.dp))
+                    .background(Color.Black, shape = RoundedCornerShape(40.dp))
                     .padding(horizontal = 16.dp)
             ) {
                 Row(
@@ -775,7 +772,7 @@ fun Jugador2(
                             .align(Alignment.CenterVertically),
                         text = viewModel.infoJugador(2),
                         style = TextStyle(
-                            color = Color.DarkGray,
+                            color = Color.White,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 12.sp,
                             fontFamily = FontFamily.Monospace
@@ -812,8 +809,8 @@ fun BotonesJugador(
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black,
-                contentColor = Color.White
+                containerColor = Color.White,
+                contentColor = Color.Black
             ),
             onClick = {
                 viewModel.dameCarta(jugadorId)
@@ -829,8 +826,8 @@ fun BotonesJugador(
             enabled = turnoJugador == jugadorId && !plantaJugador,
             shape = RoundedCornerShape(10.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Black,
-                contentColor = Color.White
+                containerColor = Color.White,
+                contentColor = Color.Black
             ),
             onClick = {
                 viewModel.plantaJugador(jugadorId, plantarse = true, cambioTurno = true)

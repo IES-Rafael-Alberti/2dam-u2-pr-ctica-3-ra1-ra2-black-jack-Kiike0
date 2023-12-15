@@ -36,8 +36,13 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
     private val _jugador = MutableLiveData<Jugador>()
     private val _iaBot = MutableLiveData<Jugador>()
 
-    private val _cambioTurno = MutableLiveData<Int>()
-    val cambioTurno: LiveData<Int> = _cambioTurno
+    private val _puntuacionJg = MutableLiveData<Int>()
+
+    private val _puntuacionIA = MutableLiveData<Int>()
+    val puntuacionIA: LiveData<Int> = _puntuacionIA
+
+    private val _puntuacionesDialog = MutableLiveData<Boolean>()
+    val puntuacionesDialog: LiveData<Boolean> = _puntuacionesDialog
 
     private val _mostrarCartasIA = MutableLiveData<Boolean>()
     val mostrarCartasIA: LiveData<Boolean> = _mostrarCartasIA
@@ -46,13 +51,13 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
     val nickName: LiveData<String> = _nickName
 
     private val _plantarJugador = MutableLiveData<Boolean>()
-    val plantarJugador: LiveData<Boolean> = _plantarJugador
-
     private val _plantarJugadorIA = MutableLiveData<Boolean>()
-    val plantarJugadorIA: LiveData<Boolean> = _plantarJugadorIA
 
     private val _actualizarCartas = MutableLiveData<Boolean>()
     val actualizarCartas: LiveData<Boolean> = _actualizarCartas
+
+    private val _actualizarPuntuaciones = MutableLiveData<Boolean>()
+    val actualizarPuntuaciones: LiveData<Boolean> = _actualizarPuntuaciones
 
 
     init {
@@ -91,6 +96,43 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /**
+     * Maneja el clic en los botones que cierran el cuadro del dialogo de final de juego.
+     */
+    fun setGameOverDialog(valor:Boolean){
+        _gameOverDialog.value = valor
+    }
+
+    /**
+     * Maneja el clic en los botones que cierran los cuadros de diálogo de las puntuaciones.
+     */
+    fun setPuntuacionesDialog(valor:Boolean){
+        _puntuacionesDialog.value = valor
+    }
+
+
+    /**
+     * Muestra las puntuaciones de cada jugador
+     * @return devuelve las puntuaciones de cada jugador
+     */
+    fun getPuntuaciones():String{
+        return "${_jugador.value?.nick}: ${_puntuacionJg.value} puntos\n" +
+                "${_iaBot.value?.nick}: ${_puntuacionIA.value} puntos"
+    }
+
+    /**
+     * Fuerza la actualización de las cartas de los jugadores en la Vista.
+     * (truco para forzar la actualizacion de las puntuaciones)
+     */
+    private fun forzarActPuntuaciones(){
+        if (_actualizarPuntuaciones.value == null) {
+            _actualizarPuntuaciones.value = false
+        } else {
+            _actualizarPuntuaciones.value = !_actualizarPuntuaciones.value!!
+        }
+    }
+
+
+    /**
      * Maneja los cambios en el nick.
      *
      * @param nickName El nick elegido para el jugador o jugadora
@@ -113,23 +155,27 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
     }
 
     /**
-     * Maneja la decisión de un jugador de plantarse o no.
+     * Maneja la decisión deljugador de plantarse o no.
      *
+     * @param idJugador El ID del jugador.
      * @param plantarse Maneja la decisión del jugador si se planta (true) o no (false)
-     * @param cambioTurno Si es true para cambia de jugador.
      */
-    fun plantaJugador(plantarse: Boolean, cambioTurno: Boolean = false) {
-        _plantarJugador.value = plantarse
+    fun plantaJugador(idJugador: Int, plantarse: Boolean) {
+        if (idJugador == 1) {
+            _plantarJugador.value = plantarse
+        } else {
+            _plantarJugadorIA.value = plantarse
+        }
+
         _gameOverDialog.value = (_plantarJugador.value == true && _plantarJugadorIA.value == true)
 
-        if (cambioTurno) {
-            cambiaTurno()
-        }
     }
 
+
     /**
-     * Solicita una nueva carta del mazo para el jugador.
+     * Solicita una nueva carta del mazo para el jugador especificado.
      *
+     * @param idJugador El ID del jugador (1 o 2).
      */
     fun dameCarta(idJugador: Int) {
         val jugador = if (idJugador == 1) _jugador.value!! else _iaBot.value!!
@@ -138,53 +184,33 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
         calculoPuntos(jugador)
 
         //Se planta automáticamente si los puntos del jugador son > 21 puntos
-        plantaJugador(jugador.puntos > 21)
+        plantaJugador(idJugador, jugador.puntos > 21)
 
         //Verifica si el juego ha terminado
         _gameOverDialog.value = (_plantarJugador.value == true && _plantarJugadorIA.value == true)
 
         forzarActualizarCartas()
+        forzarActPuntuaciones()
 
-        if (
-            (_cambioTurno.value == 1 && _plantarJugadorIA.value == false) ||
-            (_cambioTurno.value == 2 && _plantarJugador.value == false)
-        ) {
-            cambiaTurno()
-        }
     }
 
     /**
-     * Cambia el turno del jugador.
-     */
-    private fun cambiaTurno() {
-        if (_cambioTurno.value == 1) {
-            _cambioTurno.value = 2
-        } else {
-            _cambioTurno.value = 1
-        }
-    }
-
-    /**
-     * Genera información de cada jugador, incluido su nick y puntos.
+     * Genera información del jugador, incluido su nick y puntos.
      *
-     * @param idJugador El ID del jugador.
      * @return Una cadena que contiene información de los puntos de cada jugador y su nick.
      */
-    fun infoJugador(idJugador: Int): String {
-        return if (idJugador == 1) {
-            "${_jugador.value?.nick ?: "Jugador"} - ${_jugador.value?.puntos ?: 0} puntos"
-        } else {
-            "${_iaBot.value?.nick ?: "Bot"} - ${_iaBot.value?.puntos ?: 0} puntos"
-        }
+    fun infoJugador() : String {
+        return "${_jugador.value?.nick ?: "Jugador"} ${_jugador.value?.puntos ?: 0} puntos"
+
     }
 
     /**
      * Recupera la lista de cartas que tiene un jugador.
      *
-     * @param idJugador El ID del jugador (1).
+     * @param idJugador El ID del jugador (1 o 2).
      * @return Devuelve un ArrayList de objetos Card que representan las cartas del jugador.
      */
-    fun getCartasJugador(idJugador: Int): ArrayList<Carta> {
+    fun getCartasJugador(idJugador: Int) : ArrayList<Carta> {
         return if (idJugador == 1) {
             _jugador.value!!.listadeCartas
         } else {
@@ -207,14 +233,15 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
         }
         _plantarJugador.value = false
         _plantarJugadorIA.value = false
-        _cambioTurno.value = 1
+        _puntuacionIA.value = 0
+        _mostrarCartasIA.value = false
         nuevaBaraja()
         dameCarta(1)
         dameCarta(2)
     }
 
     /**
-     * Calcula los puntos totales del jugador o la ia (también es jugador) en función de sus cartas.
+     * Calcula los puntos totales de un jugador en función de sus cartas.
      *
      * @param jugador El objeto Jugador para quien se calculan los puntos.
      */
@@ -257,46 +284,83 @@ class BlackJackIAViewModel(application: Application) : AndroidViewModel(applicat
 
     /**
      * Determina el ganador del juego según los puntos de los jugadores.
-     * Además si ha conseguido 21 justo, ha ganado con un BlackJack!
+     * Además, si ha conseguido 21 justo, ha ganado con un BlackJack!
      *
      * @return Una cadena que indica el ganador o si han empatado
      */
     fun getGanador(): String {
-        return when {
-            _jugador.value!!.puntos == 21 && _iaBot.value!!.puntos != 21 -> {
-                _conseguidoBlackJack.value = true
-                "¡Has ganado con un Blackjack!"
+        try {
+            return when {
+                _jugador.value!!.puntos == 21 && _iaBot.value!!.puntos != 21 -> {
+                    _conseguidoBlackJack.value = true
+                    _mostrarCartasIA.value = true
+                    _puntuacionJg.value = _jugador.value!!.puntos
+                    _puntuacionIA.value = _iaBot.value!!.puntos
+                    "¡Ha ganado ${_jugador.value!!.nick} con un Blackjack!"
+                }
+                _iaBot.value!!.puntos == 21 && _jugador.value!!.puntos != 21 -> {
+                    _conseguidoBlackJack.value = true
+                    _mostrarCartasIA.value = true
+                    _puntuacionJg.value = _jugador.value!!.puntos
+                    _puntuacionIA.value = _iaBot.value!!.puntos
+                    "¡Ha ganado ${_iaBot.value!!.nick} con un Blackjack!"
+                }
+                _jugador.value!!.puntos > 21 && _iaBot.value!!.puntos <= 21 -> {
+                    // Caso: Jugador se ha pasado de 21
+                    _mostrarCartasIA.value = true
+                    _puntuacionJg.value = _jugador.value!!.puntos
+                    _puntuacionIA.value = _iaBot.value!!.puntos
+                    "¡Ha ganado ${_iaBot.value!!.nick}!"
+                }
+                _jugador.value!!.puntos <= 21 && _iaBot.value!!.puntos > 21 -> {
+                    // Caso: iaBot se ha pasado de 21
+                    _mostrarCartasIA.value = true
+                    _puntuacionJg.value = _jugador.value!!.puntos
+                    _puntuacionIA.value = _iaBot.value!!.puntos
+                    "¡Ha ganado ${_jugador.value!!.nick}!"
+                }
+                _jugador.value!!.puntos < 21 && _iaBot.value!!.puntos < 21 -> {
+                    when {
+                        _jugador.value!!.puntos > _iaBot.value!!.puntos -> {
+                            _mostrarCartasIA.value = true
+                            _puntuacionJg.value = _jugador.value!!.puntos
+                            _puntuacionIA.value = _iaBot.value!!.puntos
+                            "¡Ha ganado ${_jugador.value!!.nick}!"
+                        }
+                        _iaBot.value!!.puntos > _jugador.value!!.puntos -> {
+                            _mostrarCartasIA.value = true
+                            _puntuacionJg.value = _jugador.value!!.puntos
+                            _puntuacionIA.value = _iaBot.value!!.puntos
+                            "¡Ha ganado ${_iaBot.value!!.nick}!"
+                        }
+                        else -> {
+                            _mostrarCartasIA.value = true
+                            _puntuacionJg.value = _jugador.value!!.puntos
+                            _puntuacionIA.value = _iaBot.value!!.puntos
+                            "¡Empate!"
+                        }
+                    }
+                }
+                else -> {
+                    _mostrarCartasIA.value = true
+                    _puntuacionJg.value = _jugador.value!!.puntos
+                    _puntuacionIA.value = _iaBot.value!!.puntos
+                    "¡Empate!"
+                }
             }
-
-            _iaBot.value!!.puntos == 21 && _jugador.value!!.puntos != 21 -> {
-                _conseguidoBlackJack.value = true
-                "¡Ha ganado la Máquina con un Blackjack!"
-            }
-
-            _jugador.value!!.puntos < 21 && (_jugador.value!!.puntos > _iaBot.value!!.puntos || _iaBot.value!!.puntos > 21) -> {
-                _conseguidoBlackJack.value = false
-                "¡Has ganado!"
-            }
-
-            _iaBot.value!!.puntos < 21 -> {
-                _conseguidoBlackJack.value = false
-                "¡Ha ganado la Máquina!"
-            }
-
-            else -> {
-                "¡Empate!"
-            }
+        } catch (e: Exception) {
+            return "Error al determinar al ganador"
         }
     }
 
     /**
      * Finaliza el juego y resetea todas las propiedades para un nuevo juego
      */
-    fun finalizarJuego() {
+    fun finalizarJuego(){
         _configJugador.value = true
         _gameOverDialog.value = false
         _nickName.value = ""
         _btnAceptar.value = false
+        _plantarJugadorIA.value = false
     }
-
 }
