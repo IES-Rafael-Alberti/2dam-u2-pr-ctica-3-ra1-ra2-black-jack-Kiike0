@@ -1,11 +1,5 @@
 package com.example.blackjack_jetpackcompose.data
 
-import com.example.blackjack_jetpackcompose.data.Palos.CORAZONES
-import com.example.blackjack_jetpackcompose.data.Palos.DIAMANTES
-import com.example.blackjack_jetpackcompose.data.Palos.NINGUNA
-import com.example.blackjack_jetpackcompose.data.Palos.PICAS
-import com.example.blackjack_jetpackcompose.data.Palos.TREBOLES
-
 
 /**
  * Enum class de Naipes que representa los naipes de la baraja de cartas
